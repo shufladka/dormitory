@@ -27,8 +27,9 @@ public class Dormitory {
     @JoinColumn(name = "address_id")
     private Address address;
 
-
-
+    @ManyToOne()
+    @JoinColumn(name = "dormitory_type_id")
+    private DormitoryType dormitoryType;
 
     @Column(length = 2, nullable = false)
     private Integer floors;
