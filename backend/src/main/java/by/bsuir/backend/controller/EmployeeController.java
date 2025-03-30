@@ -1,8 +1,8 @@
 package by.bsuir.backend.controller;
 
-import by.bsuir.backend.model.dto.request.RoleRequestTo;
-import by.bsuir.backend.model.dto.response.RoleResponseTo;
-import by.bsuir.backend.service.RoleService;
+import by.bsuir.backend.model.dto.request.EmployeeRequestTo;
+import by.bsuir.backend.model.dto.response.EmployeeResponseTo;
+import by.bsuir.backend.service.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -15,20 +15,20 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/roles")
-public class RoleController extends AbstractController {
+@RequestMapping("/employees")
+public class EmployeeController extends AbstractController {
     
-    private final RoleService service;
+    private final EmployeeService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RoleResponseTo save(@RequestBody @Valid RoleRequestTo entity) {
+    public EmployeeResponseTo save(@RequestBody @Valid EmployeeRequestTo entity) {
         return service.save(entity);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<RoleResponseTo> findAll(@RequestParam(defaultValue = "0") Integer pageNumber,
+    public List<EmployeeResponseTo> findAll(@RequestParam(defaultValue = "0") Integer pageNumber,
                                         @RequestParam(defaultValue = "5") Integer pageSize,
                                         @RequestParam(defaultValue = "id,desc") String[] sortParameters) {
 
@@ -40,13 +40,13 @@ public class RoleController extends AbstractController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public RoleResponseTo findById(@PathVariable Integer id) {
+    public EmployeeResponseTo findById(@PathVariable Integer id) {
         return service.findById(id);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public RoleResponseTo update(@RequestBody @Valid RoleRequestTo entity) {
+    public EmployeeResponseTo update(@RequestBody @Valid EmployeeRequestTo entity) {
         return service.update(entity);
     }
 

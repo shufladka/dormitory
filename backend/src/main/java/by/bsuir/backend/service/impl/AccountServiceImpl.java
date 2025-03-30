@@ -3,8 +3,10 @@ package by.bsuir.backend.service.impl;
 import by.bsuir.backend.model.dto.request.AccountRequestTo;
 import by.bsuir.backend.model.dto.response.AccountResponseTo;
 import by.bsuir.backend.model.entity.Account;
+import by.bsuir.backend.model.entity.Role;
 import by.bsuir.backend.model.mapper.AccountMapper;
 import by.bsuir.backend.repository.AccountRepository;
+import by.bsuir.backend.repository.RoleRepository;
 import by.bsuir.backend.service.AccountService;
 import by.bsuir.backend.exception.EntityNotFoundException;
 import by.bsuir.backend.exception.EntitySavingException;
@@ -23,20 +25,24 @@ import java.util.Optional;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository repository;
+    private final RoleRepository roleRepository;
     private final AccountMapper mapper;
     private final String entityName = "Account";
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public AccountResponseTo save(AccountRequestTo requestTo) {
-        return Optional.of(requestTo)
-                .map(request -> new AccountRequestTo(
-                        request.id(),
-                        request.username(),
-                        encodePassword(request.password())
-                ))
-                .map(mapper::toEntity)
-                .map(repository::save)
+        List<Role> roles = roleRepository.findAllById(requestTo.roleIds());
+
+        Account account = mapper.toEntity(new AccountRequestTo(
+                requestTo.id(),
+                requestTo.username(),
+                encodePassword(requestTo.password()),
+                requestTo.roleIds()
+        ));
+        account.setRoles(roles);
+
+        return Optional.of(repository.save(account))
                 .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntitySavingException(entityName, requestTo.id()));
     }
@@ -49,6 +55,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public boolean authorize(String username, String password) {
+
         // Находим пользователя по имени
         Account account = repository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException(entityName));
@@ -77,13 +84,17 @@ public class AccountServiceImpl implements AccountService {
                         entity.setUsername(requestTo.username());
                     }
                     if (requestTo.password() != null) {
-                        entity.setPassword(encodePassword(requestTo.password())); // Хешируем пароль
+                        entity.setPassword(encodePassword(requestTo.password()));
+                    }
+                    if (requestTo.roleIds() != null) {
+                        List<Role> roles = roleRepository.findAllById(requestTo.roleIds());
+                        entity.setRoles(roles);
                     }
                     return entity;
                 })
                 .map(repository::save)
                 .map(mapper::toResponseTo)
-                .orElseThrow(() -> new EntityNotFoundException(String.format(entityName + " with id %s not found", requestTo.id())));
+                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.id()));
     }
 
     @Override
