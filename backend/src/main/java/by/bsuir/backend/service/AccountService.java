@@ -12,4 +12,5 @@ public interface AccountService {
     AccountResponseTo findById(Integer id);
     AccountResponseTo update(AccountRequestTo updateRequest);
     void delete(Integer id);
+    boolean authorize(String username, String password);
 }

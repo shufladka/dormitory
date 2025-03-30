@@ -2,6 +2,7 @@ package by.bsuir.backend.service.impl;
 
 import by.bsuir.backend.model.dto.request.AccountRequestTo;
 import by.bsuir.backend.model.dto.response.AccountResponseTo;
+import by.bsuir.backend.model.entity.Account;
 import by.bsuir.backend.model.mapper.AccountMapper;
 import by.bsuir.backend.repository.AccountRepository;
 import by.bsuir.backend.service.AccountService;
@@ -10,6 +11,7 @@ import by.bsuir.backend.exception.EntitySavingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,14 +25,37 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository repository;
     private final AccountMapper mapper;
     private final String entityName = "Account";
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public AccountResponseTo save(AccountRequestTo requestTo) {
         return Optional.of(requestTo)
+                .map(request -> new AccountRequestTo(
+                        request.id(),
+                        request.username(),
+                        encodePassword(request.password()), // Хешируем пароль
+                        request.email()
+                ))
                 .map(mapper::toEntity)
                 .map(repository::save)
                 .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntitySavingException(entityName, requestTo.id()));
+    }
+
+    /**
+     * Method for authorization
+     * @param username
+     * @param password
+     * @return true | false
+     */
+    @Override
+    public boolean authorize(String username, String password) {
+        // Находим пользователя по имени
+        Account account = repository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(entityName));
+
+        // Сравниваем введённый пароль с хешированным паролем в базе данных
+        return passwordEncoder.matches(password, account.getPassword());
     }
 
     @Override
@@ -53,7 +78,7 @@ public class AccountServiceImpl implements AccountService {
                         entity.setUsername(requestTo.username());
                     }
                     if (requestTo.password() != null) {
-                        entity.setPassword(requestTo.password());
+                        entity.setPassword(encodePassword(requestTo.password())); // Хешируем пароль
                     }
                     if (requestTo.email() != null) {
                         entity.setEmail(requestTo.email());
@@ -70,5 +95,10 @@ public class AccountServiceImpl implements AccountService {
         repository.findById(id)
                 .ifPresentOrElse(repository::delete,
                         () -> { throw new EntityNotFoundException(entityName, id); });
+    }
+
+    // Метод хеширования пароля через bcrypt
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 }

@@ -1,6 +1,7 @@
 package by.bsuir.backend.controller;
 
 import by.bsuir.backend.model.dto.request.AccountRequestTo;
+import by.bsuir.backend.model.dto.request.LoginRequestTo;
 import by.bsuir.backend.model.dto.response.AccountResponseTo;
 import by.bsuir.backend.service.AccountService;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +26,17 @@ public class AccountController extends AbstractController {
     @ResponseStatus(HttpStatus.CREATED)
     public AccountResponseTo save(@RequestBody @Valid AccountRequestTo entity) {
         return service.save(entity);
+    }
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> login(@RequestBody LoginRequestTo entity) {
+        boolean isAuthenticated = service.authorize(entity.username(), entity.password());
+        if (isAuthenticated) {
+            return ResponseEntity.ok("Login successful");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        }
     }
 
     @GetMapping
