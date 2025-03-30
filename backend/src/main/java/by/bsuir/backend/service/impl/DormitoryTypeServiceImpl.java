@@ -2,11 +2,11 @@ package by.bsuir.backend.service.impl;
 
 import by.bsuir.backend.exception.EntityNotFoundException;
 import by.bsuir.backend.exception.EntitySavingException;
-import by.bsuir.backend.model.dto.request.AddressRequestTo;
-import by.bsuir.backend.model.dto.response.AddressResponseTo;
-import by.bsuir.backend.model.mapper.AddressMapper;
-import by.bsuir.backend.repository.AddressRepository;
-import by.bsuir.backend.service.AddressService;
+import by.bsuir.backend.model.dto.request.DormitoryTypeRequestTo;
+import by.bsuir.backend.model.dto.response.DormitoryTypeResponseTo;
+import by.bsuir.backend.model.mapper.DormitoryTypeMapper;
+import by.bsuir.backend.repository.DormitoryTypeRepository;
+import by.bsuir.backend.service.DormitoryTypeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -18,14 +18,14 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AddressServiceImpl implements AddressService {
+public class DormitoryTypeServiceImpl implements DormitoryTypeService {
 
-    private final AddressRepository repository;
-    private final AddressMapper mapper;
-    private final String entityName = "Address";
+    private final DormitoryTypeRepository repository;
+    private final DormitoryTypeMapper mapper;
+    private final String entityName = "DormitoryType";
 
     @Override
-    public AddressResponseTo save(AddressRequestTo requestTo) {
+    public DormitoryTypeResponseTo save(DormitoryTypeRequestTo requestTo) {
         return Optional.of(requestTo)
                 .map(mapper::toEntity)
                 .map(repository::save)
@@ -34,19 +34,19 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public List<AddressResponseTo> findAll(Pageable restriction) {
+    public List<DormitoryTypeResponseTo> findAll(Pageable restriction) {
         return repository.findAll(restriction).stream().map(mapper::toResponseTo).toList();
     }
 
     @Override
-    public AddressResponseTo findById(Integer id) {
+    public DormitoryTypeResponseTo findById(Integer id) {
         return repository.findById(id)
                 .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntityNotFoundException(entityName, id));
     }
 
     @Override
-    public AddressResponseTo update(AddressRequestTo requestTo) {
+    public DormitoryTypeResponseTo update(DormitoryTypeRequestTo requestTo) {
         return repository.findById(requestTo.id())
                 .map(entityToUpdate -> mapper.updateEntity(entityToUpdate, requestTo))
                 .map(repository::save)

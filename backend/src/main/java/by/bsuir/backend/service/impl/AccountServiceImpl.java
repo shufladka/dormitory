@@ -43,8 +43,8 @@ public class AccountServiceImpl implements AccountService {
 
     /**
      * Method for authorization
-     * @param username
-     * @param password
+     * @param username Username
+     * @param password Raw password
      * @return true | false
      */
     @Override
@@ -95,8 +95,8 @@ public class AccountServiceImpl implements AccountService {
 
     /**
      * Method for password hashing throw bcrypt
-     * @param password
-     * @return
+     * @param password Raw password
+     * @return Encrypted password
      */
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);

@@ -1,6 +1,9 @@
 spring:
   application:
     name: backend
+  jackson:
+    date-format: yyyy-MM-dd
+    serialization.write-dates-as-timestamps: false
   jpa:
     hibernate:
       ddl-auto: update
@@ -12,7 +15,6 @@ spring:
 #  liquibase:
 #    enabled: true
 #    change-log: classpath:db/changelog/changelog-master.xml
-
 server:
   port: 8180
   servlet:
