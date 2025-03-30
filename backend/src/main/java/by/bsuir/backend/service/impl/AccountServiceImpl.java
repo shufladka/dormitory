@@ -27,9 +27,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountResponseTo save(AccountRequestTo requestTo) {
         return Optional.of(requestTo)
-                .map(request -> mapper.toEntity(request))
-                .map(entity -> repository.save(entity))
-                .map(savedEntity -> mapper.toResponseTo(savedEntity))
+                .map(mapper::toEntity)
+                .map(repository::save)
+                .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntitySavingException(entityName, requestTo.id()));
     }
 
