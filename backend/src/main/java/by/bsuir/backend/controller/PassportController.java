@@ -1,46 +1,34 @@
 package by.bsuir.backend.controller;
 
-import by.bsuir.backend.model.dto.request.AccountRequestTo;
-import by.bsuir.backend.model.dto.response.AccountResponseTo;
-import by.bsuir.backend.service.AccountService;
+import by.bsuir.backend.model.dto.request.PassportRequestTo;
+import by.bsuir.backend.model.dto.response.PassportResponseTo;
+import by.bsuir.backend.service.PassportService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/accounts")
-public class AccountController extends AbstractController {
+@RequestMapping("/passports")
+public class PassportController extends AbstractController {
     
-    private final AccountService service;
+    private final PassportService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountResponseTo save(@RequestBody @Valid AccountRequestTo entity) {
+    public PassportResponseTo save(@RequestBody PassportRequestTo entity) {
         return service.save(entity);
-    }
-
-    @PostMapping("/sign-in")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> login(@RequestBody @Valid AccountRequestTo entity) {
-        boolean isAuthenticated = service.authorize(entity.username(), entity.password());
-        if (isAuthenticated) {
-            return ResponseEntity.ok("Login successful");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
-        }
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<AccountResponseTo> findAll(@RequestParam(defaultValue = "0") Integer pageNumber,
+    public List<PassportResponseTo> findAll(@RequestParam(defaultValue = "0") Integer pageNumber,
                                         @RequestParam(defaultValue = "5") Integer pageSize,
                                         @RequestParam(defaultValue = "id,desc") String[] sortParameters) {
 
@@ -52,13 +40,13 @@ public class AccountController extends AbstractController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AccountResponseTo findById(@PathVariable Integer id) {
+    public PassportResponseTo findById(@PathVariable Integer id) {
         return service.findById(id);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public AccountResponseTo update(@RequestBody @Valid AccountRequestTo entity) {
+    public PassportResponseTo update(@RequestBody @Valid PassportRequestTo entity) {
         return service.update(entity);
     }
 

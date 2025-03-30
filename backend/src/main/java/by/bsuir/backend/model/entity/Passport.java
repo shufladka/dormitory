@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,14 +23,27 @@ public class Passport {
     @Column(length = 8, updatable = false, nullable = false)
     private Integer id;
 
-    @Column(length = 30, nullable = false)
-    private String name;
-
     @Column(length = 40, nullable = false)
     private String surname;
+
+    @Column(length = 30, nullable = false)
+    private String name;
 
     @Column(length = 20)
     private String patronymic;
 
-    private Date birthdate;
+    @Column(name="birth_date", nullable = false)
+    private LocalDate birthDate;
+
+    @OneToOne()
+    @JoinColumn(name = "address_id")
+    private Address address;
+
+    @OneToOne()
+    @JoinColumn(name = "contact_id")
+    private Contact contact;
+
+    @OneToOne()
+    @JoinColumn(name = "account_id")
+    private Account account;
 }
