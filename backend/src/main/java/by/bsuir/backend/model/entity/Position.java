@@ -13,14 +13,14 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @Entity
-@Table(name = "statuses")
-public class Status {
+@Table(name = "positions")
+public class Position {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(length = 3, updatable = false, nullable = false)
+    @Column(length = 5, updatable = false, nullable = false)
     private Integer id;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 30, nullable = false)
     private String name;
 }
