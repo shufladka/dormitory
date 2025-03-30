@@ -13,7 +13,6 @@ import by.bsuir.backend.repository.AddressRepository;
 import by.bsuir.backend.repository.ContactRepository;
 import by.bsuir.backend.repository.PassportRepository;
 import by.bsuir.backend.service.PassportService;
-import by.bsuir.backend.util.AbstractFieldUpdater;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +24,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PassportServiceImpl extends AbstractFieldUpdater implements PassportService {
+public class PassportServiceImpl implements PassportService {
 
     private final PassportRepository repository;
     private final AddressRepository addressRepository;

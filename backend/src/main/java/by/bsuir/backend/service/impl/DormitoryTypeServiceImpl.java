@@ -7,7 +7,6 @@ import by.bsuir.backend.model.dto.response.DormitoryTypeResponseTo;
 import by.bsuir.backend.model.mapper.DormitoryTypeMapper;
 import by.bsuir.backend.repository.DormitoryTypeRepository;
 import by.bsuir.backend.service.DormitoryTypeService;
-import by.bsuir.backend.util.AbstractFieldUpdater;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +18,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DormitoryTypeServiceImpl extends AbstractFieldUpdater implements DormitoryTypeService {
+public class DormitoryTypeServiceImpl implements DormitoryTypeService {
 
     private final DormitoryTypeRepository repository;
     private final DormitoryTypeMapper mapper;

@@ -7,7 +7,6 @@ import by.bsuir.backend.model.dto.response.AddressResponseTo;
 import by.bsuir.backend.model.mapper.AddressMapper;
 import by.bsuir.backend.repository.AddressRepository;
 import by.bsuir.backend.service.AddressService;
-import by.bsuir.backend.util.AbstractFieldUpdater;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +18,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AddressServiceImpl extends AbstractFieldUpdater implements AddressService {
+public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository repository;
     private final AddressMapper mapper;
@@ -49,16 +48,7 @@ public class AddressServiceImpl extends AbstractFieldUpdater implements AddressS
     @Override
     public AddressResponseTo update(AddressRequestTo requestTo) {
         return repository.findById(requestTo.id())
-                .map(entity -> {
-                    updateField(requestTo.isCity(), entity::setIsCity);
-                    updateField(requestTo.settlement(), entity::setSettlement);
-                    updateField(requestTo.street(), entity::setStreet);
-                    updateField(requestTo.buildingNumber(), entity::setBuildingNumber);
-                    updateField(requestTo.buildingIndex(), entity::setBuildingIndex);
-                    updateField(requestTo.flatNumber(), entity::setFlatNumber);
-                    updateField(requestTo.zip(), entity::setZip);
-                    return entity;
-                })
+                .map(entityToUpdate -> mapper.updateEntity(entityToUpdate, requestTo))
                 .map(repository::save)
                 .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntityNotFoundException(String.format(entityName + " with id %s not found", requestTo.id())));

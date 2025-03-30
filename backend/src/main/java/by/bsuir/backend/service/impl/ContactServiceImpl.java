@@ -7,7 +7,6 @@ import by.bsuir.backend.model.dto.response.ContactResponseTo;
 import by.bsuir.backend.model.mapper.ContactMapper;
 import by.bsuir.backend.repository.ContactRepository;
 import by.bsuir.backend.service.ContactService;
-import by.bsuir.backend.util.AbstractFieldUpdater;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +18,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ContactServiceImpl extends AbstractFieldUpdater implements ContactService {
+public class ContactServiceImpl implements ContactService {
 
     private final ContactRepository repository;
     private final ContactMapper mapper;
@@ -49,13 +48,7 @@ public class ContactServiceImpl extends AbstractFieldUpdater implements ContactS
     @Override
     public ContactResponseTo update(ContactRequestTo requestTo) {
         return repository.findById(requestTo.id())
-                .map(entity -> {
-                    updateField(requestTo.provider(), entity::setProvider);
-                    updateField(requestTo.code(), entity::setCode);
-                    updateField(requestTo.phoneNumber(), entity::setPhoneNumber);
-                    updateField(requestTo.email(), entity::setEmail);
-                    return entity;
-                })
+                .map(entityToUpdate -> mapper.updateEntity(entityToUpdate, requestTo))
                 .map(repository::save)
                 .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntityNotFoundException(String.format(entityName + " with id %s not found", requestTo.id())));
