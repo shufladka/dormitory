@@ -33,8 +33,7 @@ public class AccountServiceImpl implements AccountService {
                 .map(request -> new AccountRequestTo(
                         request.id(),
                         request.username(),
-                        encodePassword(request.password()), // Хешируем пароль
-                        request.email()
+                        encodePassword(request.password())
                 ))
                 .map(mapper::toEntity)
                 .map(repository::save)
@@ -79,9 +78,6 @@ public class AccountServiceImpl implements AccountService {
                     }
                     if (requestTo.password() != null) {
                         entity.setPassword(encodePassword(requestTo.password())); // Хешируем пароль
-                    }
-                    if (requestTo.email() != null) {
-                        entity.setEmail(requestTo.email());
                     }
                     return entity;
                 })

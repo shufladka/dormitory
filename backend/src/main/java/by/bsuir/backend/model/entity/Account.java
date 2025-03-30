@@ -26,7 +26,4 @@ public class Account {
 
     @Column(length = 64, nullable = false)
     private String password;
-
-    @Column(length = 32, nullable = false)
-    private String email;
 }
