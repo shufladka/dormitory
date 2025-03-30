@@ -1,8 +1,8 @@
 package by.bsuir.backend.controller;
 
-import by.bsuir.backend.model.dto.request.StatusRequestTo;
-import by.bsuir.backend.model.dto.response.StatusResponseTo;
-import by.bsuir.backend.service.StatusService;
+import by.bsuir.backend.model.dto.request.RoleRequestTo;
+import by.bsuir.backend.model.dto.response.RoleResponseTo;
+import by.bsuir.backend.service.RoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -18,17 +18,17 @@ import java.util.List;
 @RequestMapping("/roles")
 public class RoleController extends AbstractController {
     
-    private final StatusService service;
+    private final RoleService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public StatusResponseTo save(@RequestBody @Valid StatusRequestTo entity) {
+    public RoleResponseTo save(@RequestBody @Valid RoleRequestTo entity) {
         return service.save(entity);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<StatusResponseTo> findAll(@RequestParam(defaultValue = "0") Integer pageNumber,
+    public List<RoleResponseTo> findAll(@RequestParam(defaultValue = "0") Integer pageNumber,
                                         @RequestParam(defaultValue = "5") Integer pageSize,
                                         @RequestParam(defaultValue = "id,desc") String[] sortParameters) {
 
@@ -40,13 +40,13 @@ public class RoleController extends AbstractController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public StatusResponseTo findById(@PathVariable Integer id) {
+    public RoleResponseTo findById(@PathVariable Integer id) {
         return service.findById(id);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public StatusResponseTo update(@RequestBody @Valid StatusRequestTo entity) {
+    public RoleResponseTo update(@RequestBody @Valid RoleRequestTo entity) {
         return service.update(entity);
     }
 
