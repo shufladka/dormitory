@@ -2,11 +2,11 @@ package by.bsuir.backend.service.impl;
 
 import by.bsuir.backend.exception.EntityNotFoundException;
 import by.bsuir.backend.exception.EntitySavingException;
-import by.bsuir.backend.model.dto.request.AddressRequestTo;
-import by.bsuir.backend.model.dto.response.AddressResponseTo;
-import by.bsuir.backend.model.mapper.AddressMapper;
-import by.bsuir.backend.repository.AddressRepository;
-import by.bsuir.backend.service.AddressService;
+import by.bsuir.backend.model.dto.request.ContactRequestTo;
+import by.bsuir.backend.model.dto.response.ContactResponseTo;
+import by.bsuir.backend.model.mapper.ContactMapper;
+import by.bsuir.backend.repository.ContactRepository;
+import by.bsuir.backend.service.ContactService;
 import by.bsuir.backend.util.AbstractFieldUpdater;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +19,14 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AddressServiceImpl extends AbstractFieldUpdater implements AddressService {
+public class ContactServiceImpl extends AbstractFieldUpdater implements ContactService {
 
-    private final AddressRepository repository;
-    private final AddressMapper mapper;
-    private final String entityName = "Address";
+    private final ContactRepository repository;
+    private final ContactMapper mapper;
+    private final String entityName = "Contact";
 
     @Override
-    public AddressResponseTo save(AddressRequestTo requestTo) {
+    public ContactResponseTo save(ContactRequestTo requestTo) {
         return Optional.of(requestTo)
                 .map(mapper::toEntity)
                 .map(repository::save)
@@ -35,28 +35,25 @@ public class AddressServiceImpl extends AbstractFieldUpdater implements AddressS
     }
 
     @Override
-    public List<AddressResponseTo> findAll(Pageable restriction) {
+    public List<ContactResponseTo> findAll(Pageable restriction) {
         return repository.findAll(restriction).stream().map(mapper::toResponseTo).toList();
     }
 
     @Override
-    public AddressResponseTo findById(Integer id) {
+    public ContactResponseTo findById(Integer id) {
         return repository.findById(id)
                 .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntityNotFoundException(entityName, id));
     }
 
     @Override
-    public AddressResponseTo update(AddressRequestTo requestTo) {
+    public ContactResponseTo update(ContactRequestTo requestTo) {
         return repository.findById(requestTo.id())
                 .map(entity -> {
-                    updateField(requestTo.isCity(), entity::setIsCity);
-                    updateField(requestTo.settlement(), entity::setSettlement);
-                    updateField(requestTo.street(), entity::setStreet);
-                    updateField(requestTo.buildingNumber(), entity::setBuildingNumber);
-                    updateField(requestTo.buildingIndex(), entity::setBuildingIndex);
-                    updateField(requestTo.flatNumber(), entity::setFlatNumber);
-                    updateField(requestTo.zip(), entity::setZip);
+                    updateField(requestTo.provider(), entity::setProvider);
+                    updateField(requestTo.code(), entity::setCode);
+                    updateField(requestTo.phoneNumber(), entity::setPhoneNumber);
+                    updateField(requestTo.email(), entity::setEmail);
                     return entity;
                 })
                 .map(repository::save)
