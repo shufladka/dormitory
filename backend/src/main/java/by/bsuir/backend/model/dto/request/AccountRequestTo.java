@@ -7,7 +7,7 @@ public record AccountRequestTo(
         Integer id,
 
         @NotNull
-        @Size(min = 2, max = 64, message = "Login must be between 2 and 20 characters.")
+        @Size(min = 2, max = 20, message = "Username must be between 2 and 20 characters.")
         String username,
 
         @NotNull

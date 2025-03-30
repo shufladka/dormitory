@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 
 public record LoginRequestTo(
         @NotNull
-        @Size(min = 2, max = 64, message = "Login must be between 2 and 20 characters.")
+        @Size(min = 2, max = 20, message = "Login must be between 2 and 20 characters.")
         String username,
 
         @NotNull

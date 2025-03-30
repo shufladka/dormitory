@@ -97,7 +97,11 @@ public class AccountServiceImpl implements AccountService {
                         () -> { throw new EntityNotFoundException(entityName, id); });
     }
 
-    // Метод хеширования пароля через bcrypt
+    /**
+     * Method for password hashing throw bcrypt
+     * @param password
+     * @return
+     */
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
