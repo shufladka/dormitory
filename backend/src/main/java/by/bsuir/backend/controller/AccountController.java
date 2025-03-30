@@ -1,7 +1,6 @@
 package by.bsuir.backend.controller;
 
 import by.bsuir.backend.model.dto.request.AccountRequestTo;
-import by.bsuir.backend.model.dto.request.LoginRequestTo;
 import by.bsuir.backend.model.dto.response.AccountResponseTo;
 import by.bsuir.backend.service.AccountService;
 import jakarta.validation.Valid;
@@ -28,9 +27,9 @@ public class AccountController extends AbstractController {
         return service.save(entity);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/sign-in")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> login(@RequestBody LoginRequestTo entity) {
+    public ResponseEntity<String> login(@RequestBody @Valid AccountRequestTo entity) {
         boolean isAuthenticated = service.authorize(entity.username(), entity.password());
         if (isAuthenticated) {
             return ResponseEntity.ok("Login successful");

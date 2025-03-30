@@ -12,10 +12,6 @@ public record AccountRequestTo(
 
         @NotNull
         @Size(min = 8, max = 64, message = "Password must be between 8 and 64 characters.")
-        String password,
-
-        @NotNull
-        @Size(min = 2, max = 32, message = "Email must be between 2 and 32 characters.")
-        String email
+        String password
 ) {
 }
