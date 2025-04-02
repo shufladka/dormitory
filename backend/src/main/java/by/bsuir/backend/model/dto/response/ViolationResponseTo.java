@@ -2,14 +2,13 @@ package by.bsuir.backend.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record ContractResponseTo(
+public record ViolationResponseTo(
         Integer id,
-        Integer blockId,
+        Integer residentId,
         Integer statusId,
-        BigDecimal rentPrice,
+        String reason,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
         LocalDateTime createdAt,

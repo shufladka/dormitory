@@ -63,9 +63,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void delete(Integer id) {
         repository.findById(id)
-                .ifPresentOrElse(Payment -> {
-                    Payment.setDeletedAt(LocalDateTime.now());
-                    repository.save(Payment);
+                .ifPresentOrElse(payment -> {
+                    payment.setDeletedAt(LocalDateTime.now());
+                    repository.save(payment);
                 }, () -> {
                     throw new EntityNotFoundException(entityName, id);
                 });
