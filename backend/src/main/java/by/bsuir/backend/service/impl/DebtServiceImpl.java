@@ -2,16 +2,16 @@ package by.bsuir.backend.service.impl;
 
 import by.bsuir.backend.exception.EntityNotFoundException;
 import by.bsuir.backend.exception.EntitySavingException;
-import by.bsuir.backend.model.dto.request.ContractRequestTo;
-import by.bsuir.backend.model.dto.response.ContractResponseTo;
-import by.bsuir.backend.model.entity.Block;
+import by.bsuir.backend.model.dto.request.DebtRequestTo;
+import by.bsuir.backend.model.dto.response.DebtResponseTo;
 import by.bsuir.backend.model.entity.Contract;
+import by.bsuir.backend.model.entity.Debt;
 import by.bsuir.backend.model.entity.Status;
-import by.bsuir.backend.model.mapper.ContractMapper;
-import by.bsuir.backend.repository.BlockRepository;
+import by.bsuir.backend.model.mapper.DebtMapper;
 import by.bsuir.backend.repository.ContractRepository;
+import by.bsuir.backend.repository.DebtRepository;
 import by.bsuir.backend.repository.StatusRepository;
-import by.bsuir.backend.service.ContractService;
+import by.bsuir.backend.service.DebtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -24,28 +24,28 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ContractServiceImpl implements ContractService {
+public class DebtServiceImpl implements DebtService {
 
-    private final ContractRepository repository;
-    private final BlockRepository blockRepository;
+    private final DebtRepository repository;
+    private final ContractRepository contractRepository;
     private final StatusRepository statusRepository;
 
-    private final ContractMapper mapper;
-    private final String entityName = "Contract";
+    private final DebtMapper mapper;
+    private final String entityName = "Debt";
 
     @Override
-    public ContractResponseTo save(ContractRequestTo requestTo) {
-        Block blockFromRequest = blockRepository.findById(requestTo.blockId())
-                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.blockId()));
+    public DebtResponseTo save(DebtRequestTo requestTo) {
+        Contract contractFromRequest = contractRepository.findById(requestTo.contractId())
+                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.contractId()));
 
         Status statusFromRequest = statusRepository.findById(requestTo.statusId())
                 .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.statusId()));
 
         return Optional.of(requestTo)
                 .map(request -> {
-                    Contract contract = mapper.toEntity(request, blockFromRequest, statusFromRequest);
-                    contract.setCreatedAt(LocalDateTime.now());
-                    return contract;
+                    Debt Debt = mapper.toEntity(request, contractFromRequest, statusFromRequest);
+                    Debt.setCreatedAt(LocalDateTime.now());
+                    return Debt;
                 })
                 .map(repository::save)
                 .map(mapper::toResponseTo)
@@ -53,24 +53,24 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public List<ContractResponseTo> findAll(Pageable restriction) {
+    public List<DebtResponseTo> findAll(Pageable restriction) {
         return repository.findAllByDeletedAtIsNull(restriction).stream()
                 .map(mapper::toResponseTo)
                 .toList();
     }
 
     @Override
-    public ContractResponseTo findById(Integer id) {
+    public DebtResponseTo findById(Integer id) {
         return repository.findByIdAndDeletedAtIsNull(id)
                 .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntityNotFoundException(entityName, id));
     }
 
     @Override
-    public ContractResponseTo update(ContractRequestTo requestTo) {
-        Block blockFromRequest = blockRepository
-                .findById(requestTo.blockId())
-                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.blockId()));
+    public DebtResponseTo update(DebtRequestTo requestTo) {
+        Contract contractFromRequest = contractRepository
+                .findById(requestTo.contractId())
+                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.contractId()));
 
         Status statusFromRequest = statusRepository
                 .findById(requestTo.statusId())
@@ -78,7 +78,7 @@ public class ContractServiceImpl implements ContractService {
 
         return repository.findById(requestTo.id())
                 .map(entityToUpdate -> {
-                    mapper.updateEntity(entityToUpdate, requestTo, blockFromRequest, statusFromRequest);
+                    mapper.updateEntity(entityToUpdate, requestTo, contractFromRequest, statusFromRequest);
                     entityToUpdate.setUpdatedAt(LocalDateTime.now());
                     return entityToUpdate;
                 })
@@ -91,12 +91,11 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public void delete(Integer id) {
         repository.findById(id)
-                .ifPresentOrElse(contract -> {
-                    contract.setDeletedAt(LocalDateTime.now());
-                    repository.save(contract);
+                .ifPresentOrElse(debt -> {
+                    debt.setDeletedAt(LocalDateTime.now());
+                    repository.save(debt);
                 }, () -> {
                     throw new EntityNotFoundException(entityName, id);
                 });
     }
-
 }

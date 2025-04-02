@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 @Setter
 @SuperBuilder
 @Entity
-@Table(name = "contracts")
-public class Contract {
+@Table(name = "payments")
+public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,23 +26,21 @@ public class Contract {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "block_id", nullable = false)
-    private Block block;
+    @JoinColumn(name = "contract_id", nullable = false)
+    private Contract contract;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id", nullable = false)
-    private Status status;
+    @Column(name="amount", precision = 8, scale = 2, nullable = false)
+    private BigDecimal amount;
 
-    @Column(name="rent_price", precision = 8, scale = 2, nullable = false)
-    private BigDecimal rentPrice;
+    @Column(name="bank_name", length = 30, nullable = false)
+    private String bankName;
+
+    @Column(length = 40, nullable = false)
+    private String code;
 
     @Column(name="created_at", updatable = false, nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
-
-    @Column(name="updated_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime updatedAt;
 
     @Column(name="deleted_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")

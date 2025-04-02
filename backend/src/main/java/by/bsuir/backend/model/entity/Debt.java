@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 @Setter
 @SuperBuilder
 @Entity
-@Table(name = "contracts")
-public class Contract {
+@Table(name = "debts")
+public class Debt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,15 +26,15 @@ public class Contract {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "block_id", nullable = false)
-    private Block block;
+    @JoinColumn(name = "contract_id", nullable = false)
+    private Contract contract;
 
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
     private Status status;
 
-    @Column(name="rent_price", precision = 8, scale = 2, nullable = false)
-    private BigDecimal rentPrice;
+    @Column(precision = 8, scale = 2, nullable = false)
+    private BigDecimal amount;
 
     @Column(name="created_at", updatable = false, nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")

@@ -2,16 +2,16 @@ package by.bsuir.backend.service.impl;
 
 import by.bsuir.backend.exception.EntityNotFoundException;
 import by.bsuir.backend.exception.EntitySavingException;
-import by.bsuir.backend.model.dto.request.ContractRequestTo;
-import by.bsuir.backend.model.dto.response.ContractResponseTo;
-import by.bsuir.backend.model.entity.Block;
-import by.bsuir.backend.model.entity.Contract;
+import by.bsuir.backend.model.dto.request.ViolationRequestTo;
+import by.bsuir.backend.model.dto.response.ViolationResponseTo;
+import by.bsuir.backend.model.entity.Resident;
+import by.bsuir.backend.model.entity.Violation;
 import by.bsuir.backend.model.entity.Status;
-import by.bsuir.backend.model.mapper.ContractMapper;
-import by.bsuir.backend.repository.BlockRepository;
-import by.bsuir.backend.repository.ContractRepository;
+import by.bsuir.backend.model.mapper.ViolationMapper;
+import by.bsuir.backend.repository.ResidentRepository;
+import by.bsuir.backend.repository.ViolationRepository;
 import by.bsuir.backend.repository.StatusRepository;
-import by.bsuir.backend.service.ContractService;
+import by.bsuir.backend.service.ViolationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -24,28 +24,28 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ContractServiceImpl implements ContractService {
+public class ViolationServiceImpl implements ViolationService {
 
-    private final ContractRepository repository;
-    private final BlockRepository blockRepository;
+    private final ViolationRepository repository;
+    private final ResidentRepository residentRepository;
     private final StatusRepository statusRepository;
 
-    private final ContractMapper mapper;
-    private final String entityName = "Contract";
+    private final ViolationMapper mapper;
+    private final String entityName = "Violation";
 
     @Override
-    public ContractResponseTo save(ContractRequestTo requestTo) {
-        Block blockFromRequest = blockRepository.findById(requestTo.blockId())
-                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.blockId()));
+    public ViolationResponseTo save(ViolationRequestTo requestTo) {
+        Resident residentFromRequest = residentRepository.findById(requestTo.residentId())
+                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.residentId()));
 
         Status statusFromRequest = statusRepository.findById(requestTo.statusId())
                 .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.statusId()));
 
         return Optional.of(requestTo)
                 .map(request -> {
-                    Contract contract = mapper.toEntity(request, blockFromRequest, statusFromRequest);
-                    contract.setCreatedAt(LocalDateTime.now());
-                    return contract;
+                    Violation violation = mapper.toEntity(request, residentFromRequest, statusFromRequest);
+                    violation.setCreatedAt(LocalDateTime.now());
+                    return violation;
                 })
                 .map(repository::save)
                 .map(mapper::toResponseTo)
@@ -53,24 +53,24 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public List<ContractResponseTo> findAll(Pageable restriction) {
+    public List<ViolationResponseTo> findAll(Pageable restriction) {
         return repository.findAllByDeletedAtIsNull(restriction).stream()
                 .map(mapper::toResponseTo)
                 .toList();
     }
 
     @Override
-    public ContractResponseTo findById(Integer id) {
+    public ViolationResponseTo findById(Integer id) {
         return repository.findByIdAndDeletedAtIsNull(id)
                 .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntityNotFoundException(entityName, id));
     }
 
     @Override
-    public ContractResponseTo update(ContractRequestTo requestTo) {
-        Block blockFromRequest = blockRepository
-                .findById(requestTo.blockId())
-                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.blockId()));
+    public ViolationResponseTo update(ViolationRequestTo requestTo) {
+        Resident residentFromRequest = residentRepository
+                .findById(requestTo.residentId())
+                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.residentId()));
 
         Status statusFromRequest = statusRepository
                 .findById(requestTo.statusId())
@@ -78,7 +78,7 @@ public class ContractServiceImpl implements ContractService {
 
         return repository.findById(requestTo.id())
                 .map(entityToUpdate -> {
-                    mapper.updateEntity(entityToUpdate, requestTo, blockFromRequest, statusFromRequest);
+                    mapper.updateEntity(entityToUpdate, requestTo, residentFromRequest, statusFromRequest);
                     entityToUpdate.setUpdatedAt(LocalDateTime.now());
                     return entityToUpdate;
                 })
@@ -91,9 +91,9 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public void delete(Integer id) {
         repository.findById(id)
-                .ifPresentOrElse(contract -> {
-                    contract.setDeletedAt(LocalDateTime.now());
-                    repository.save(contract);
+                .ifPresentOrElse(violation -> {
+                    violation.setDeletedAt(LocalDateTime.now());
+                    repository.save(violation);
                 }, () -> {
                     throw new EntityNotFoundException(entityName, id);
                 });
