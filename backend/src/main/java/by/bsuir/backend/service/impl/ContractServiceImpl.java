@@ -52,7 +52,6 @@ public class ContractServiceImpl implements ContractService {
                 .orElseThrow(() -> new EntitySavingException(entityName, requestTo.id()));
     }
 
-
     @Override
     public List<ContractResponseTo> findAll(Pageable restriction) {
         return repository.findAllByDeletedAtIsNull(restriction).stream()
@@ -66,7 +65,6 @@ public class ContractServiceImpl implements ContractService {
                 .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntityNotFoundException(entityName, id));
     }
-
 
     @Override
     public ContractResponseTo update(ContractRequestTo requestTo) {
@@ -89,7 +87,6 @@ public class ContractServiceImpl implements ContractService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(entityName + " with id %s not found", requestTo.id())));
     }
-
 
     @Override
     public void delete(Integer id) {
