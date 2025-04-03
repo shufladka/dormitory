@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1743712549083-42" author="klezo">
+        <dropForeignKeyConstraint baseTableName="accounts_roles" constraintName="accounts_roles_ibfk_1"/>
+    </changeSet>
+    <changeSet id="1743712549083-43" author="klezo">
+        <dropForeignKeyConstraint baseTableName="accounts_roles" constraintName="accounts_roles_ibfk_2"/>
+    </changeSet>
+    <changeSet id="1743712549083-44" author="klezo">
+        <dropForeignKeyConstraint baseTableName="residents_contracts" constraintName="residents_contracts_ibfk_1"/>
+    </changeSet>
+    <changeSet id="1743712549083-45" author="klezo">
+        <dropForeignKeyConstraint baseTableName="residents_contracts" constraintName="residents_contracts_ibfk_2"/>
+    </changeSet>
+    <changeSet id="1743712549083-9" author="klezo">
+        <addColumn tableName="accounts_roles">
+            <column name="account_id" type="INT"/>
+            <column name="role_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1743712549083-10" author="klezo">
+        <addNotNullConstraint columnDataType="INT" columnName="account_id" tableName="accounts_roles"/>
+    </changeSet>
+    <changeSet id="1743712549083-11" author="klezo">
+        <addColumn tableName="contracts">
+            <column name="block_id" type="INT"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="deleted_at" type="DATETIME"/>
+            <column name="rent_price" type="DECIMAL(8, 2)"/>
+            <column name="status_id" type="INT"/>
+            <column name="updated_at" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1743712549083-12" author="klezo">
+        <addNotNullConstraint columnDataType="INT" columnName="block_id" tableName="contracts"/>
+    </changeSet>
+    <changeSet id="1743712549083-13" author="klezo">
+        <addColumn tableName="residents_contracts">
+            <column name="contract_id" type="INT"/>
+            <column name="resident_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1743712549083-14" author="klezo">
+        <addNotNullConstraint columnDataType="INT" columnName="contract_id" tableName="residents_contracts"/>
+    </changeSet>
+    <changeSet id="1743712549083-16" author="klezo">
+        <addNotNullConstraint columnDataType="DATETIME" columnName="created_at" tableName="contracts"/>
+    </changeSet>
+    <changeSet id="1743712549083-18" author="klezo">
+        <addColumn tableName="contacts">
+            <column name="email" type="VARCHAR(32)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1743712549083-19" author="klezo">
+        <addNotNullConstraint columnDataType="VARCHAR(32)" columnName="email" tableName="contacts"/>
+    </changeSet>
+    <changeSet id="1743712549083-21" author="klezo">
+        <addNotNullConstraint columnDataType="DECIMAL(8, 2)" columnName="rent_price" tableName="contracts"/>
+    </changeSet>
+    <changeSet id="1743712549083-23" author="klezo">
+        <addNotNullConstraint columnDataType="INT" columnName="resident_id" tableName="residents_contracts"/>
+    </changeSet>
+    <changeSet id="1743712549083-25" author="klezo">
+        <addNotNullConstraint columnDataType="INT" columnName="role_id" tableName="accounts_roles"/>
+    </changeSet>
+    <changeSet id="1743712549083-27" author="klezo">
+        <addNotNullConstraint columnDataType="INT" columnName="status_id" tableName="contracts"/>
+    </changeSet>
+    <changeSet id="1743712549083-29" author="klezo">
+        <addUniqueConstraint columnNames="username" constraintName="uc_accounts_username" tableName="accounts"/>
+    </changeSet>
+    <changeSet id="1743712549083-30" author="klezo">
+        <addUniqueConstraint columnNames="address_id" constraintName="uc_dormitories_address" tableName="dormitories"/>
+    </changeSet>
+    <changeSet id="1743712549083-31" author="klezo">
+        <addUniqueConstraint columnNames="passport_id" constraintName="uc_employees_passport" tableName="employees"/>
+    </changeSet>
+    <changeSet id="1743712549083-32" author="klezo">
+        <addUniqueConstraint columnNames="account_id" constraintName="uc_passports_account" tableName="passports"/>
+    </changeSet>
+    <changeSet id="1743712549083-33" author="klezo">
+        <addUniqueConstraint columnNames="address_id" constraintName="uc_passports_address" tableName="passports"/>
+    </changeSet>
+    <changeSet id="1743712549083-34" author="klezo">
+        <addUniqueConstraint columnNames="contact_id" constraintName="uc_passports_contact" tableName="passports"/>
+    </changeSet>
+    <changeSet id="1743712549083-35" author="klezo">
+        <addUniqueConstraint columnNames="passport_id" constraintName="uc_residents_passport" tableName="residents"/>
+    </changeSet>
+    <changeSet id="1743712549083-36" author="klezo">
+        <addForeignKeyConstraint baseColumnNames="block_id" baseTableName="contracts"
+                                 constraintName="FK_CONTRACTS_ON_BLOCK" referencedColumnNames="id"
+                                 referencedTableName="blocks"/>
+    </changeSet>
+    <changeSet id="1743712549083-37" author="klezo">
+        <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="contracts"
+                                 constraintName="FK_CONTRACTS_ON_STATUS" referencedColumnNames="id"
+                                 referencedTableName="statuses"/>
+    </changeSet>
+    <changeSet id="1743712549083-38" author="klezo">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="accounts_roles"
+                                 constraintName="fk_accrol_on_account" referencedColumnNames="id"
+                                 referencedTableName="accounts"/>
+    </changeSet>
+    <changeSet id="1743712549083-39" author="klezo">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="accounts_roles"
+                                 constraintName="fk_accrol_on_role" referencedColumnNames="id"
+                                 referencedTableName="roles"/>
+    </changeSet>
+    <changeSet id="1743712549083-40" author="klezo">
+        <addForeignKeyConstraint baseColumnNames="contract_id" baseTableName="residents_contracts"
+                                 constraintName="fk_rescon_on_contract" referencedColumnNames="id"
+                                 referencedTableName="contracts"/>
+    </changeSet>
+    <changeSet id="1743712549083-41" author="klezo">
+        <addForeignKeyConstraint baseColumnNames="resident_id" baseTableName="residents_contracts"
+                                 constraintName="fk_rescon_on_resident" referencedColumnNames="id"
+                                 referencedTableName="residents"/>
+    </changeSet>
+    <changeSet id="1743712549083-46" author="klezo">
+        <dropPrimaryKey constraintName="PRIMARY" tableName="accounts_roles"/>
+    </changeSet>
+    <changeSet id="1743712549083-47" author="klezo">
+        <dropPrimaryKey constraintName="PRIMARY" tableName="residents_contracts"/>
+    </changeSet>
+    <changeSet id="1743712549083-48" author="klezo">
+        <dropColumn columnName="accounts_id" tableName="accounts_roles"/>
+
+        <dropColumn columnName="roles_id" tableName="accounts_roles"/>
+    </changeSet>
+    <changeSet id="1743712549083-49" author="klezo">
+        <dropColumn columnName="contracts_id" tableName="residents_contracts"/>
+
+        <dropColumn columnName="residents_id" tableName="residents_contracts"/>
+    </changeSet>
+    <changeSet id="1743712549083-50" author="klezo">
+        <dropColumn columnName="email" tableName="accounts"/>
+    </changeSet>
+    <changeSet id="1743712549083-51" author="klezo">
+        <dropColumn columnName="number" tableName="contracts"/>
+
+        <dropColumn columnName="signed_at" tableName="contracts"/>
+    </changeSet>
+    <changeSet id="1743712549083-1" author="klezo">
+        <modifyDataType columnName="building_index" newDataType="VARCHAR(255)" tableName="addresses"/>
+    </changeSet>
+    <changeSet id="1743712549083-2" author="klezo">
+        <addNotNullConstraint columnDataType="INT" columnName="contract_id" tableName="debts" validate="true"/>
+    </changeSet>
+    <changeSet id="1743712549083-3" author="klezo">
+        <addNotNullConstraint columnDataType="INT" columnName="contract_id" tableName="payments" validate="true"/>
+    </changeSet>
+    <changeSet id="1743712549083-4" author="klezo">
+        <dropNotNullConstraint columnDataType="int" columnName="dormitory_id" tableName="blocks"/>
+    </changeSet>
+    <changeSet id="1743712549083-5" author="klezo">
+        <modifyDataType columnName="name" newDataType="VARCHAR(20)" tableName="statuses"/>
+    </changeSet>
+    <changeSet id="1743712549083-6" author="klezo">
+        <dropNotNullConstraint columnDataType="int" columnName="passport_id" tableName="employees"/>
+    </changeSet>
+    <changeSet id="1743712549083-7" author="klezo">
+        <dropNotNullConstraint columnDataType="int" columnName="passport_id" tableName="residents"/>
+    </changeSet>
+    <changeSet id="1743712549083-8" author="klezo">
+        <addNotNullConstraint columnDataType="INT" columnName="status_id" tableName="violations" validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>
