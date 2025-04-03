@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.4.4'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
+//    id 'org.liquibase.gradle' version '2.2.0'
 }
 
 group = 'by.bsuir'
@@ -28,6 +29,18 @@ ext {
     set('snippetsDir', file("build/generated-snippets"))
 }
 
+//liquibase {
+//    activities {
+//        main {
+//            changeLogFile 'src/main/resources/db/changelog/changelog-master.xml'
+//            url 'jdbc:mariadb://localhost:3306/dormitory'
+//            username 'root'
+//            password ''
+//            driver 'org.mariadb.jdbc.Driver'
+//        }
+//    }
+//}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
@@ -38,7 +51,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation("org.springframework.security:spring-security-crypto:6.4.4")
-//    implementation 'org.liquibase:liquibase-core'
+//    implementation 'org.liquibase:liquibase-core:4.23.1'
     compileOnly 'org.projectlombok:lombok'
 //    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
     runtimeOnly 'com.mysql:mysql-connector-j'
