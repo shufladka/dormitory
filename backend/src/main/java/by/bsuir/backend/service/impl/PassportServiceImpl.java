@@ -7,6 +7,7 @@ import by.bsuir.backend.model.dto.response.PassportResponseTo;
 import by.bsuir.backend.model.entity.Account;
 import by.bsuir.backend.model.entity.Address;
 import by.bsuir.backend.model.entity.Contact;
+import by.bsuir.backend.model.entity.Passport;
 import by.bsuir.backend.model.mapper.PassportMapper;
 import by.bsuir.backend.repository.AccountRepository;
 import by.bsuir.backend.repository.AddressRepository;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,24 +38,24 @@ public class PassportServiceImpl implements PassportService {
 
     @Override
     public PassportResponseTo save(PassportRequestTo requestTo) {
-        Address addressFromRequest = addressRepository
-                .findById(requestTo.addressId())
-                .orElseThrow(() ->
-                        new EntityNotFoundException(entityName, requestTo.addressId()));
-        Contact contactFromRequest = contactRepository
-                .findById(requestTo.contactId())
-                .orElseThrow(() ->
-                        new EntityNotFoundException(entityName, requestTo.contactId()));
-        Account accountFromRequest = accountRepository
-                .findById(requestTo.accountId())
-                .orElseThrow(() ->
-                        new EntityNotFoundException(entityName, requestTo.accountId()));
+        Address addressFromRequest = (requestTo.addressId() != null) ?
+                addressRepository.findById(requestTo.addressId())
+                        .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.addressId())) :
+                null;
 
-        return Optional.of(requestTo)
-                .map(request -> mapper
-                        .toEntity(request, addressFromRequest,
-                                contactFromRequest, accountFromRequest))
-                .map(repository::save)
+        Contact contactFromRequest = (requestTo.contactId() != null) ?
+                contactRepository.findById(requestTo.contactId())
+                        .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.contactId())) :
+                null;
+
+        Account accountFromRequest = (requestTo.accountId() != null) ?
+                accountRepository.findById(requestTo.accountId())
+                        .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.accountId())) :
+                null;
+
+        Passport passport = mapper.toEntity(requestTo, addressFromRequest, contactFromRequest, accountFromRequest);
+
+        return Optional.of(repository.save(passport))
                 .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntitySavingException(entityName, requestTo.id()));
     }
@@ -70,30 +72,72 @@ public class PassportServiceImpl implements PassportService {
                 .orElseThrow(() -> new EntityNotFoundException(entityName, id));
     }
 
+//    @Override
+//    public PassportResponseTo update(PassportRequestTo requestTo) {
+//        Address addressFromRequest = addressRepository
+//                .findById(requestTo.addressId())
+//                .orElseThrow(() ->
+//                        new EntityNotFoundException(entityName, requestTo.addressId()));
+//        Contact contactFromRequest = contactRepository
+//                .findById(requestTo.contactId())
+//                .orElseThrow(() ->
+//                        new EntityNotFoundException(entityName, requestTo.contactId()));
+//        Account accountFromRequest = accountRepository
+//                .findById(requestTo.accountId())
+//                .orElseThrow(() ->
+//                        new EntityNotFoundException(entityName, requestTo.accountId()));
+//
+//        return repository.findById(requestTo.id())
+//                .map(entityToUpdate -> mapper.updateEntity(entityToUpdate, requestTo,
+//                        addressFromRequest, contactFromRequest, accountFromRequest))
+//                .map(repository::save)
+//                .map(mapper::toResponseTo)
+//                .orElseThrow(() ->
+//                        new EntityNotFoundException(String
+//                                .format(entityName + " with id %s not found", requestTo.id())));
+//    }
+
     @Override
     public PassportResponseTo update(PassportRequestTo requestTo) {
-        Address addressFromRequest = addressRepository
-                .findById(requestTo.addressId())
-                .orElseThrow(() ->
-                        new EntityNotFoundException(entityName, requestTo.addressId()));
-        Contact contactFromRequest = contactRepository
-                .findById(requestTo.contactId())
-                .orElseThrow(() ->
-                        new EntityNotFoundException(entityName, requestTo.contactId()));
-        Account accountFromRequest = accountRepository
-                .findById(requestTo.accountId())
-                .orElseThrow(() ->
-                        new EntityNotFoundException(entityName, requestTo.accountId()));
-
         return repository.findById(requestTo.id())
-                .map(entityToUpdate -> mapper.updateEntity(entityToUpdate, requestTo,
-                        addressFromRequest, contactFromRequest, accountFromRequest))
-                .map(repository::save)
+                .map(entityToUpdate -> {
+                    if (requestTo.addressId() != null) {
+                        Address address = addressRepository.findById(requestTo.addressId())
+                                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.addressId()));
+                        entityToUpdate.setAddress(address);
+                    }
+                    if (requestTo.contactId() != null) {
+                        Contact contact = contactRepository.findById(requestTo.contactId())
+                                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.contactId()));
+                        entityToUpdate.setContact(contact);
+                    }
+                    if (requestTo.accountId() != null) {
+                        Account account = accountRepository.findById(requestTo.accountId())
+                                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.accountId()));
+                        entityToUpdate.setAccount(account);
+                    }
+
+                    if (requestTo.surname() != null) {
+                        entityToUpdate.setSurname(requestTo.surname());
+                    }
+                    if (requestTo.name() != null) {
+                        entityToUpdate.setName(requestTo.name());
+                    }
+                    if (requestTo.patronymic() != null) {
+                        entityToUpdate.setPatronymic(requestTo.patronymic());
+                    }
+                    if (requestTo.birthDate() != null) {
+                        entityToUpdate.setBirthDate(requestTo.birthDate());
+                    }
+
+                    return repository.save(entityToUpdate);
+                })
                 .map(mapper::toResponseTo)
-                .orElseThrow(() ->
-                        new EntityNotFoundException(String
-                                .format(entityName + " with id %s not found", requestTo.id())));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format(entityName + " with id %s not found", requestTo.id())));
     }
+
+
 
     @Override
     public void delete(Integer id) {
