@@ -6,8 +6,9 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import router from '@/utils/router';
 import logger from '@/plugins/logger';
 import 'bootstrap/dist/css/bootstrap.min.css';
- import 'bootstrap/dist/js/bootstrap.bundle.min.js';
- import '@/assets/styles.scss';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import '@/assets/styles.scss';
+import '@/assets/input.css'
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
