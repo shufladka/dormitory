@@ -30,15 +30,19 @@ function save() {
   <slot />
 
   <div class="flex justify-end gap-3">
-    <div v-if="error" class="pt-4 flex place-content-end text-pink-700">
-      Произошла ошибка
-    </div>
-    <button @click="cancel" :disabled="loading"
-      class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+    <div v-if="error" class="pt-4 flex place-content-end text-pink-700">Произошла ошибка</div>
+    <button
+      @click="cancel"
+      :disabled="loading"
+      class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+    >
       Отменить
     </button>
-    <button @click="save" :disabled="loading"
-      class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+    <button
+      @click="save"
+      :disabled="loading"
+      class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+    >
       Сохранить
     </button>
   </div>

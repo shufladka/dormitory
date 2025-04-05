@@ -3,7 +3,6 @@ import RootContainer from '@/components/RootContainer.vue'
 import ProfileSectionWrapper from '@/components/ProfileSectionWrapper.vue'
 import { useProfileStore } from '@/store/profileStore'
 import { storeToRefs } from 'pinia'
-import { onBeforeMount, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -15,16 +14,12 @@ async function contactHandle() {
   if (contact.value.id) await profile.updateContactInfo()
   else await profile.saveContactInfo()
 }
-
-onMounted(async () => {
-  if (!contact.value.id) await profile.getContact()
-})
 </script>
 
 <template>
   <ProfileSectionWrapper
     title="Контактные данные"
-    @cancel="contact.getContact"
+    @cancel="profile.getContact"
     @save="contactHandle"
     :loading="loading"
     :error="errorContact"

@@ -3,7 +3,6 @@ import RootContainer from '@/components/RootContainer.vue'
 import ProfileSectionWrapper from '@/components/ProfileSectionWrapper.vue'
 import { useProfileStore } from '@/store/profileStore'
 import { storeToRefs } from 'pinia'
-import { onBeforeMount, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -15,16 +14,12 @@ async function passportHandle() {
   if (passport.value.id) await profile.updatePassportInfo()
   else await profile.savePassportInfo()
 }
-
-onMounted(async () => {
-  if (!passport.value.id) await profile.getPassport()
-})
 </script>
 
 <template>
   <ProfileSectionWrapper
     title="Персональные данные"
-    @cancel="passport.getPassport"
+    @cancel="profile.getPassport"
     @save="passportHandle"
     :loading="loading"
     :error="errorPassport"

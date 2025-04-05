@@ -3,7 +3,6 @@ import RootContainer from '@/components/RootContainer.vue'
 import ProfileSectionWrapper from '@/components/ProfileSectionWrapper.vue'
 import { useProfileStore } from '@/store/profileStore'
 import { storeToRefs } from 'pinia'
-import { onBeforeMount, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -15,16 +14,12 @@ async function addressHandle() {
   if (address.value.id) await profile.updateAddressInfo()
   else await profile.saveAddressInfo()
 }
-
-onMounted(async () => {
-  if (!address.value.id) await profile.getAddress()
-})
 </script>
 
 <template>
   <ProfileSectionWrapper
     title="Адрес регистрации"
-    @cancel="address.getAddress"
+    @cancel="profile.getAddress"
     @save="addressHandle"
     :loading="loading"
     :error="errorAddress"
