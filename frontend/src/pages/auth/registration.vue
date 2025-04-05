@@ -7,7 +7,7 @@ import { onMounted, ref } from 'vue'
 const router = useRouter()
 
 const auth = useAuthStore()
-const { username, password, error } = storeToRefs(auth)
+const { credentials, error } = storeToRefs(auth)
 
 const showPassword = ref<boolean>(false)
 const confirmPassword = ref('')
@@ -17,7 +17,7 @@ function togglePasswordVisibility() {
 }
 
 async function validateAndPost() {
-  if (password.value === confirmPassword.value) {
+  if (credentials.value.password === confirmPassword.value) {
     await auth.register()
   } else {
     error.value = true
@@ -25,9 +25,9 @@ async function validateAndPost() {
 }
 
 onMounted(() => {
-  username.value = ''
-  password.value = ''
-  confirmPassword.value = ''
+  credentials.value.username = null
+  credentials.value.password = null
+  confirmPassword.value = null
   error.value = false
 })
 
@@ -49,7 +49,7 @@ function goToSignIn() {
           <label for="username" class="block text-sm/6 font-medium text-gray-900">Логин</label>
           <div class="mt-2">
             <input 
-              v-model="username" 
+              v-model="credentials.username" 
               type="text" 
               name="username" 
               id="username" 
@@ -67,7 +67,7 @@ function goToSignIn() {
           </div>
           <div class="mt-2">
             <input 
-              v-model="password" 
+              v-model="credentials.password" 
               :type="showPassword ? 'text' : 'password'" 
               name="password" 
               id="password" 

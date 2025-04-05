@@ -4,15 +4,20 @@ import { useRouter } from 'vue-router'
 import { ref } from "vue";
 
 export interface UserCredentials {
-    id?: number,
+    id: number,
     username: string,
-    password?: string,
-    roleIds?: string[]
+    password: string,
+    roleIds: string[]
 }
 
 export const useAuthStore = defineStore('useAuthStore', () => {
-    const username = ref<string>('') 
-    const password = ref<string>('') 
+    const credentials = ref<UserCredentials>({
+        id: null,
+        username: null,
+        password: null,
+        roleIds: null
+    })
+    
     const error = ref<boolean>(false)
 
     const router = useRouter()
@@ -21,8 +26,7 @@ export const useAuthStore = defineStore('useAuthStore', () => {
         try {
             error.value = false
 
-            const response = await login({ username: username.value, password: password.value })
-
+            const response = await login({ username: credentials.value.username, password: credentials.value.password })
             localStorage.setItem('account-data', JSON.stringify(response))
 
             router.replace('/')
@@ -35,20 +39,15 @@ export const useAuthStore = defineStore('useAuthStore', () => {
     async function register() {
         try {
             error.value = false
-            await registration({ username: username.value, password: password.value })
+            await registration({ username: credentials.value.username, password: credentials.value.password })
         } catch (e: unknown) {
             console.log(e)
             error.value = true
         }
     }
 
-    function isAuthenticated(): boolean {
-        return false
-    }
-
     return {
-        username,
-        password,
+        credentials,
         error,
         signIn,
         register,

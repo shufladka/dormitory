@@ -7,7 +7,7 @@ import { onMounted, ref } from 'vue'
 const router = useRouter()
 
 const auth = useAuthStore()
-const { username, password, error } = storeToRefs(auth)
+const { credentials, error } = storeToRefs(auth)
 
 const showPassword = ref<boolean>(false)
 
@@ -16,8 +16,8 @@ function togglePasswordVisibility() {
 }
 
 onMounted(() => {
-  username.value = ''
-  password.value = ''
+  credentials.value.username = null
+  credentials.value.password = null
   error.value = false
 })
 
@@ -39,7 +39,7 @@ function goToRegistration() {
           <label for="username" class="block text-sm/6 font-medium text-gray-900">Логин</label>
           <div class="mt-2">
             <input 
-              v-model="username" 
+              v-model="credentials.username" 
               type="text" 
               name="username" 
               id="username" 
@@ -58,7 +58,7 @@ function goToRegistration() {
           </div>
           <div class="mt-2">
             <input 
-              v-model="password" 
+              v-model="credentials.password" 
               :type="showPassword ? 'text' : 'password'" 
               name="password" 
               id="password" 
