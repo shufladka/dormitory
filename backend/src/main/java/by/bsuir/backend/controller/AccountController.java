@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,12 +31,15 @@ public class AccountController extends AbstractController {
 
     @PostMapping("/sign-in")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> login(@RequestBody @Valid AccountRequestTo entity) {
-        boolean isAuthenticated = service.authorize(entity.username(), entity.password());
-        if (isAuthenticated) {
-            return ResponseEntity.ok("Login successful");
+    public ResponseEntity<?> login(@RequestBody @Valid AccountRequestTo entity) {
+        Optional<AccountResponseTo> account = service.authorize(entity.username(), entity.password());
+
+        if (account.isPresent()) {
+            return ResponseEntity.ok(account.get());
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid credentials"));
         }
     }
 

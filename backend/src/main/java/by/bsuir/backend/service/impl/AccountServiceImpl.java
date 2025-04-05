@@ -52,21 +52,11 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new EntitySavingException(entityName, requestTo.id()));
     }
 
-    /**
-     * Method for authorization
-     * @param username Username
-     * @param password Raw password
-     * @return true | false
-     */
     @Override
-    public boolean authorize(String username, String password) {
-
-        // Находим пользователя по имени
-        Account account = repository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException(entityName));
-
-        // Сравниваем введённый пароль с хешированным паролем в базе данных
-        return passwordEncoder.matches(password, account.getPassword());
+    public Optional<AccountResponseTo> authorize(String username, String password) {
+        return repository.findByUsername(username)
+                .filter(account -> passwordEncoder.matches(password, account.getPassword()))
+                .map(mapper::toResponseTo);
     }
 
     @Override
