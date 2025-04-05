@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/store/authStore'
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
 const auth = useAuthStore()
-const { username, password } = storeToRefs(auth)
+const { username, password, error } = storeToRefs(auth)
+
+const showPassword = ref<boolean>(false)
+
+function togglePasswordVisibility() {
+  showPassword.value = !showPassword.value
+}
 </script>
 
 <template>
@@ -14,6 +21,7 @@ const { username, password } = storeToRefs(auth)
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <div class="space-y-6">
+
         <div>
           <label for="username" class="block text-sm/6 font-medium text-gray-900">Логин</label>
           <div class="mt-2">
@@ -31,11 +39,14 @@ const { username, password } = storeToRefs(auth)
         <div>
           <div class="flex items-center justify-between">
             <label for="password" class="block text-sm/6 font-medium text-gray-900">Пароль</label>
+            <button @click="togglePasswordVisibility" type="button" class="text-sm text-indigo-600">
+              {{ showPassword ? 'Скрыть' : 'Показать' }}
+            </button>
           </div>
           <div class="mt-2">
             <input 
               v-model="password" 
-              type="password" 
+              :type="showPassword ? 'text' : 'password'" 
               name="password" 
               id="password" 
               autocomplete="current-password" 
@@ -47,7 +58,10 @@ const { username, password } = storeToRefs(auth)
         <div>
           <button type="submit" @click="auth.signIn" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Войти</button>
         </div>
-    </div>
+      </div>
+
+      <div v-if="error" class="pt-4 flex place-content-center text-pink-700">Произошла ошибка</div>
+    
     </div>
   </div>
 </template>
