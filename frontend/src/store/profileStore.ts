@@ -72,6 +72,8 @@ export const useProfileStore = defineStore('useProfileStore', () => {
 
     const router = useRouter()
 
+    const profileOption = ref<boolean>(false)
+
     const userCredentials = ref<UserCredentials | null>(null)
     const loadUserData = () => {
         const storedUserData = localStorage.getItem('account-data')
@@ -213,6 +215,7 @@ export const useProfileStore = defineStore('useProfileStore', () => {
     }
 
     return {
+        profileOption,
         passport,
         address,
         contact,

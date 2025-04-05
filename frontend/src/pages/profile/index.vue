@@ -11,7 +11,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const profile = useProfileStore()
-const { passport, address, contact, isAuthenticated } = storeToRefs(profile)
+const { profileOption, passport, address, contact, isAuthenticated } = storeToRefs(profile)
 
 onBeforeMount(() => {
   if (!isAuthenticated.value) router.replace('/auth/sign-in')
@@ -26,7 +26,7 @@ onMounted(async () => {
 
 <template>
   <RootContainer>
-    <div class="space-y-8">
+    <div v-if="profileOption" class="space-y-8">
       <PersonalInfoSection />
 
       <hr />
