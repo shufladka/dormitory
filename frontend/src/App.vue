@@ -12,4 +12,7 @@ import '@fontsource/nunito/700.css'
 </template>
 
 <style scoped>
+body, html {
+  height: 100%;
+}
 </style>

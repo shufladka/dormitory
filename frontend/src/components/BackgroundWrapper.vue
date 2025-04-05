@@ -8,15 +8,21 @@ import background from '@/assets/background.png';
   </div>
 </template>
 
-<style scoped>
+<style lang="css" scoped>
 .page-background {
   position: relative;
-  min-height: 100vh;
+  max-width: 100%;
+  max-height: 100%;
   background-image: url('@/assets/background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
   z-index: 1;
+  overflow: hidden;
+}
+
+body, html {
+  max-height: 100%;
+  overflow-x: hidden;
 }
 </style>
