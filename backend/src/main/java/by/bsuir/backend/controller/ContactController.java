@@ -44,6 +44,12 @@ public class ContactController extends AbstractController {
         return service.findById(id);
     }
 
+    @GetMapping("/passport/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ContactResponseTo findByPassportId(@PathVariable Integer id) {
+        return service.findByPassportId(id);
+    }
+
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public ContactResponseTo update(@RequestBody @Valid ContactRequestTo entity) {

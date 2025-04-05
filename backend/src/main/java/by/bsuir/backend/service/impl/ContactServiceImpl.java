@@ -4,8 +4,11 @@ import by.bsuir.backend.exception.EntityNotFoundException;
 import by.bsuir.backend.exception.EntitySavingException;
 import by.bsuir.backend.model.dto.request.ContactRequestTo;
 import by.bsuir.backend.model.dto.response.ContactResponseTo;
+import by.bsuir.backend.model.entity.Contact;
+import by.bsuir.backend.model.entity.Passport;
 import by.bsuir.backend.model.mapper.ContactMapper;
 import by.bsuir.backend.repository.ContactRepository;
+import by.bsuir.backend.repository.PassportRepository;
 import by.bsuir.backend.service.ContactService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,7 @@ import java.util.Optional;
 public class ContactServiceImpl implements ContactService {
 
     private final ContactRepository repository;
+    private final PassportRepository passportRepository;
     private final ContactMapper mapper;
     private final String entityName = "Contact";
 
@@ -43,6 +47,20 @@ public class ContactServiceImpl implements ContactService {
         return repository.findById(id)
                 .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntityNotFoundException(entityName, id));
+    }
+
+    @Override
+    public ContactResponseTo findByPassportId(Integer passportId) {
+        Passport passport = passportRepository.findById(passportId)
+                .orElseThrow(() -> new EntityNotFoundException("Passport", passportId));
+
+        Contact contact = passport.getContact();
+
+        if (contact == null) {
+            throw new EntityNotFoundException("Address", passportId);
+        }
+
+        return mapper.toResponseTo(contact);
     }
 
     @Override

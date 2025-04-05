@@ -10,6 +10,7 @@ public interface ContactService {
     ContactResponseTo save(ContactRequestTo entity);
     List<ContactResponseTo> findAll(Pageable restriction);
     ContactResponseTo findById(Integer id);
+    ContactResponseTo findByPassportId(Integer passportId);
     ContactResponseTo update(ContactRequestTo updateRequest);
     void delete(Integer id);
 }
