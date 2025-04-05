@@ -22,13 +22,8 @@ public record PassportRequestTo(
         @NotNull
         LocalDate birthDate,
 
-        @NotNull
         Integer addressId,
-
-        @NotNull
         Integer contactId,
-
-        @NotNull
         Integer accountId
 ) {
 }
