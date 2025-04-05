@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,14 +33,18 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountResponseTo save(AccountRequestTo requestTo) {
-        List<Role> roles = roleRepository.findAllById(requestTo.roleIds());
+        List<Role> roles = new ArrayList<>();
+        if (requestTo.roleIds() != null && !requestTo.roleIds().isEmpty()) {
+            roles = roleRepository.findAllById(requestTo.roleIds());
+        }
 
         Account account = mapper.toEntity(new AccountRequestTo(
                 requestTo.id(),
                 requestTo.username(),
                 encodePassword(requestTo.password()),
-                requestTo.roleIds()
+                null
         ));
+
         account.setRoles(roles);
 
         return Optional.of(repository.save(account))
