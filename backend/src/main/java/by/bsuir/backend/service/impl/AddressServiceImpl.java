@@ -4,8 +4,11 @@ import by.bsuir.backend.exception.EntityNotFoundException;
 import by.bsuir.backend.exception.EntitySavingException;
 import by.bsuir.backend.model.dto.request.AddressRequestTo;
 import by.bsuir.backend.model.dto.response.AddressResponseTo;
+import by.bsuir.backend.model.entity.Address;
+import by.bsuir.backend.model.entity.Passport;
 import by.bsuir.backend.model.mapper.AddressMapper;
 import by.bsuir.backend.repository.AddressRepository;
+import by.bsuir.backend.repository.PassportRepository;
 import by.bsuir.backend.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,7 @@ import java.util.Optional;
 public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository repository;
+    private final PassportRepository passportRepository;
     private final AddressMapper mapper;
     private final String entityName = "Address";
 
@@ -43,6 +47,17 @@ public class AddressServiceImpl implements AddressService {
         return repository.findById(id)
                 .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntityNotFoundException(entityName, id));
+    }
+
+    @Override
+    public AddressResponseTo findByPassportId(Integer passportId) {
+        Passport passport = passportRepository.findById(passportId)
+                .orElseThrow(() -> new EntityNotFoundException("Passport", passportId));
+        Address address = passport.getAddress();
+        if (address == null) {
+            throw new EntityNotFoundException("Address", passportId);
+        }
+        return mapper.toResponseTo(address);
     }
 
     @Override

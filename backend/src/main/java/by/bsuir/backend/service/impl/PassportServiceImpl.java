@@ -79,7 +79,6 @@ public class PassportServiceImpl implements PassportService {
                 .orElseThrow(() -> new EntityNotFoundException(entityName, accountId));
     }
 
-
     @Override
     public PassportResponseTo update(PassportRequestTo requestTo) {
         return repository.findById(requestTo.id())

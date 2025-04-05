@@ -44,6 +44,12 @@ public class AddressController extends AbstractController {
         return service.findById(id);
     }
 
+    @GetMapping("/passport/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public AddressResponseTo findByPassportId(@PathVariable Integer id) {
+        return service.findByPassportId(id);
+    }
+
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public AddressResponseTo update(@RequestBody @Valid AddressRequestTo entity) {
