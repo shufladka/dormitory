@@ -7,7 +7,14 @@ import { storeToRefs } from 'pinia'
 import { onMounted, watch } from 'vue'
 
 const profile = useProfileStore()
-const { passport, surname, name, patronymic, birthDate, error } = storeToRefs(profile)
+const { passport, surname, name, patronymic, birthDate, error, loading } = storeToRefs(profile)
+
+async function passportHandle() {
+  if (passport.value.id)
+    await profile.update()
+  else
+    await profile.save()
+}
 
 onMounted(async () => {
   if (!passport.value)
@@ -15,11 +22,11 @@ onMounted(async () => {
 })
 
 watch([surname, name, patronymic, birthDate], () => {
-  if (passport.value) {
-    passport.value.surname = surname.value
-    passport.value.name = name.value
-    passport.value.patronymic = patronymic.value
-    passport.value.birthDate = birthDate.value
+  passport.value = {
+    surname: surname.value,
+    name: name.value,
+    patronymic: patronymic.value,
+    birthDate: birthDate.value
   }
 })
 </script>
@@ -27,63 +34,10 @@ watch([surname, name, patronymic, birthDate], () => {
 <template>
   <RootContainer>
     <div class="space-y-12">
-      <!-- <div class="border-b border-gray-900/10 pb-12">
-          <h2 class="text-base font-semibold leading-7 text-gray-900">Profile</h2>
-          <p class="mt-1 text-sm leading-6 text-gray-600">This information will be displayed publicly so be careful what you share.</p>
-  
-          <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div class="sm:col-span-4">
-              <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
-              <div class="mt-2">
-                <div class="flex items-center rounded-md bg-white pl-3 ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600">
-                  <div class="shrink-0 select-none text-sm text-gray-500">workcation.com/</div>
-                  <input type="text" name="username" id="username" class="block w-full flex-1 border-0 bg-transparent py-1.5 pl-1 pr-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" placeholder="janesmith" />
-                </div>
-              </div>
-            </div>
-  
-            <div class="col-span-full">
-              <label for="about" class="block text-sm font-medium leading-6 text-gray-900">About</label>
-              <div class="mt-2">
-                <textarea name="about" id="about" rows="3" class="block w-full rounded-md border-0 bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm"></textarea>
-              </div>
-              <p class="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p>
-            </div>
-  
-            <div class="col-span-full">
-              <label for="photo" class="block text-sm font-medium leading-6 text-gray-900">Photo</label>
-              <div class="mt-2 flex items-center gap-x-3">
-                <UserCircleIcon class="h-12 w-12 text-gray-300" aria-hidden="true" />
-                <button type="button" class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Change</button>
-              </div>
-            </div>
-  
-            <div class="col-span-full">
-              <label for="cover-photo" class="block text-sm font-medium leading-6 text-gray-900">Cover photo</label>
-              <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                <div class="text-center">
-                  <PhotoIcon class="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
-                  <div class="mt-4 flex text-sm leading-6 text-gray-600">
-                    <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 hover:text-indigo-500">
-                      <span>Upload a file</span>
-                      <input id="file-upload" name="file-upload" type="file" class="sr-only" />
-                    </label>
-                    <p class="pl-1">or drag and drop</p>
-                  </div>
-                  <p class="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
-
       <!-- Personal Information Section -->
       <div>
         <div>
           <h3 class="text-lg font-medium leading-6 text-gray-900">Персональные данные</h3>
-          <p class="mt-1 text-sm text-gray-500">
-            Используйте постоянный адрес, по которому вы сможете получать почту.
-          </p>
         </div>
 
         <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
@@ -147,6 +101,28 @@ watch([surname, name, patronymic, birthDate], () => {
               />
             </div>
           </div>
+        </div>
+      </div>
+
+
+        <div class="flex justify-end gap-3">
+          <div v-if="error" class="pt-4 flex place-content-end text-pink-700">Произошла ошибка</div>
+          <button
+            @click="profile.getPassport"
+            :disabled="loading"
+            class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            Отменить
+          </button>
+          <button
+            @click="passportHandle"
+            :disabled="loading"
+            class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            Сохранить
+          </button>
+        </div>
+
 
           <!-- <div class="sm:col-span-4">
             <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
@@ -234,8 +210,6 @@ watch([surname, name, patronymic, birthDate], () => {
               />
             </div>
           </div> -->
-        </div>
-      </div>
 
       <!-- Notifications Section -->
       <!-- <div class="pt-8">
@@ -280,22 +254,7 @@ watch([surname, name, patronymic, birthDate], () => {
       </div>
     </div> -->
 
-      <div class="pt-5">
-        <div class="flex justify-end gap-3">
-          <button
-            type="button"
-            class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            Отменить
-          </button>
-          <button
-            type="submit"
-            class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            Сохранить
-          </button>
-        </div>
-      </div>
+     
     </div>
   </RootContainer>
 </template>

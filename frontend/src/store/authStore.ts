@@ -3,6 +3,13 @@ import { defineStore } from "pinia";
 import { useRouter } from 'vue-router'
 import { ref } from "vue";
 
+export interface UserCredentials {
+    id?: number,
+    username: string,
+    password?: string,
+    roleIds?: string[]
+}
+
 export const useAuthStore = defineStore('useAuthStore', () => {
     const username = ref<string>('') 
     const password = ref<string>('') 
@@ -14,7 +21,10 @@ export const useAuthStore = defineStore('useAuthStore', () => {
         try {
             error.value = false
 
-            await login({ username: username.value, password: password.value })
+            const response = await login({ username: username.value, password: password.value })
+
+            localStorage.setItem('account-data', JSON.stringify(response))
+
             router.replace('/')
         } catch (e: unknown) {
             console.log(e)

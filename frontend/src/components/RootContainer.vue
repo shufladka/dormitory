@@ -32,6 +32,7 @@ function goProfile() {
 }
 
 function signOut() {
+  localStorage.clear()
   router.replace('/auth/sign-in')
 }
 </script>

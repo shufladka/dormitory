@@ -1,9 +1,11 @@
-import { createPassport, getPassportInfo } from '@/api/profile'
+import { createPassport, getPassportInfo, updatePassport } from '@/api/profile'
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import { UserCredentials } from './authStore'
 
 export interface PassportInfo {
+    id?: number
     surname: string
     name: string
     patronymic: string
@@ -21,57 +23,69 @@ export const useProfileStore = defineStore('useProfileStore', () => {
     const patronymic = ref<string>('')
     const birthDate = ref()
 
+    const loading = ref<boolean>(false)
     const error = ref<boolean>(false)
 
     const router = useRouter()
 
+    const userCredentials = ref<UserCredentials | null>(null)
+    const loadUserData = () => {
+        const storedUserData = localStorage.getItem('account-data')
+        if (storedUserData) {
+            userCredentials.value = JSON.parse(storedUserData)
+        }
+    }
+
     async function getPassport() {
         try {
-            error.value = false
+            loading.value = true
+            loadUserData()
 
-            const response = await getPassportInfo(10)
+            const response = await getPassportInfo(userCredentials.value.id)
             passport.value = response
-
+        } catch (e: unknown) {
+            console.log(e)
+        } finally {
+            loading.value = false
             mapPassportFields(passport.value)
-        } catch (e: unknown) {
-            console.log(e)
-            error.value = true
         }
     }
 
-    async function savePassport() {
+    async function save() {
         try {
+            loading.value = true
             error.value = false
 
-            const response = await createPassport({
-                surname: surname.value,
-                name: name.value,
-                patronymic: patronymic.value,
-                birthDate: birthDate.value,
-            })
-            // router.replace('/')
+            passport.value.accountId = userCredentials.value.id
+            await createPassport(passport.value)
         } catch (e: unknown) {
+            console.log(passport.value)
             console.log(e)
             error.value = true
+        } finally {
+            loading.value = false
         }
     }
 
-    async function updatePassport() {
+    async function update() {
         try {
+            loading.value = true
             error.value = false
 
-            // const response = await registration({ username: username.value, password: password.value })
+            await updatePassport(passport.value)
         } catch (e: unknown) {
             console.log(e)
             error.value = true
+        } finally {
+            loading.value = false
         }
     }
 
     function mapPassportFields(passportData: PassportInfo) {
-        surname.value = passportData.surname || ''
-        name.value = passportData.name || ''
-        patronymic.value = passportData.patronymic || ''
-        birthDate.value = passportData.birthDate || ''
+        surname.value = passportData ? passportData.surname : ''
+        name.value = passportData ? passportData.name : ''
+        patronymic.value = passportData ? passportData.patronymic : ''
+        birthDate.value = passportData ? passportData.birthDate : ''
     }
 
     return {
@@ -81,6 +95,9 @@ export const useProfileStore = defineStore('useProfileStore', () => {
         patronymic,
         birthDate,
         error,
+        loading,
         getPassport,
+        save,
+        update,
     }
 })
