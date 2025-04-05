@@ -23,14 +23,12 @@ const currentPage = computed(() => {
 const navigation: NavigationItem[] = [
   { name: 'Главная', link: '/' },
   { name: 'Общежитие', link: '/dormitory' },
-  { name: 'Projects', link: null },
-  { name: 'Calendar', link: null },
 ]
 
 const router = useRouter()
 
 function goProfile() {
-  router.replace('/profile')
+  router.replace('/profile') 
 }
 
 function signOut() {
@@ -39,7 +37,7 @@ function signOut() {
 </script>
 
 <template>
-  <Disclosure as="nav" class="bg-gray-800">
+  <Disclosure as="nav" class="bg-slate-700">
     <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div class="relative flex h-16 items-center justify-between">
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">

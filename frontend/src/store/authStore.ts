@@ -14,7 +14,7 @@ export const useAuthStore = defineStore('useAuthStore', () => {
         try {
             error.value = false
 
-            const response = await login({ username: username.value, password: password.value })
+            await login({ username: username.value, password: password.value })
             router.replace('/')
         } catch (e: unknown) {
             console.log(e)
@@ -25,9 +25,7 @@ export const useAuthStore = defineStore('useAuthStore', () => {
     async function register() {
         try {
             error.value = false
-
-            const response = await registration({ username: username.value, password: password.value })
-            console.log(response)
+            await registration({ username: username.value, password: password.value })
         } catch (e: unknown) {
             console.log(e)
             error.value = true

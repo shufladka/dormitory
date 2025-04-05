@@ -14,6 +14,24 @@ export async function registration(payload: any) {
     })
 }
 
+export async function getPassportInfo(id: number) {
+  return $fetch(`/api/v1/passports/account/${id}`)
+}
+
+export async function createPassport(payload: any) {
+  return $fetch('/api/v1/passports', {
+    method: 'post',
+    body: payload,
+  })
+}
+
+export async function updatePassport(payload: any) {
+  return $fetch('/api/v1/passports', {
+    method: 'put',
+    body: payload,
+  })
+}
+
 export async function getAccountsList() {
   return $fetch('/api/v1/accounts')
 }

@@ -1,14 +1,33 @@
-
 <script lang="ts" setup>
 import { PhotoIcon, UserCircleIcon } from '@heroicons/vue/24/solid'
 import { ChevronDownIcon } from '@heroicons/vue/16/solid'
 import RootContainer from '@/components/RootContainer.vue'
+import { useProfileStore } from '@/store/profileStore'
+import { storeToRefs } from 'pinia'
+import { onMounted, watch } from 'vue'
+
+const profile = useProfileStore()
+const { passport, surname, name, patronymic, birthDate, error } = storeToRefs(profile)
+
+onMounted(async () => {
+  if (!passport.value)
+    await profile.getPassport()
+})
+
+watch([surname, name, patronymic, birthDate], () => {
+  if (passport.value) {
+    passport.value.surname = surname.value
+    passport.value.name = name.value
+    passport.value.patronymic = patronymic.value
+    passport.value.birthDate = birthDate.value
+  }
+})
 </script>
 
 <template>
-   <RootContainer>
-      <div class="space-y-12">
-        <div class="border-b border-gray-900/10 pb-12">
+  <RootContainer>
+    <div class="space-y-12">
+      <!-- <div class="border-b border-gray-900/10 pb-12">
           <h2 class="text-base font-semibold leading-7 text-gray-900">Profile</h2>
           <p class="mt-1 text-sm leading-6 text-gray-600">This information will be displayed publicly so be careful what you share.</p>
   
@@ -56,80 +75,170 @@ import RootContainer from '@/components/RootContainer.vue'
               </div>
             </div>
           </div>
-        </div>
-  
-         <!-- Personal Information Section -->
-         <div>
+        </div> -->
+
+      <!-- Personal Information Section -->
       <div>
-        <h3 class="text-lg font-medium leading-6 text-gray-900">Personal Information</h3>
-        <p class="mt-1 text-sm text-gray-500">Use a permanent address where you can receive mail.</p>
+        <div>
+          <h3 class="text-lg font-medium leading-6 text-gray-900">Персональные данные</h3>
+          <p class="mt-1 text-sm text-gray-500">
+            Используйте постоянный адрес, по которому вы сможете получать почту.
+          </p>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <div class="sm:col-span-2">
+            <label for="surname" class="block text-sm font-medium text-gray-700">Фамилия</label>
+            <div class="mt-1">
+              <input
+                v-model="surname"
+                type="text"
+                name="surname"
+                id="surname"
+                autocomplete="family-name"
+                required
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="name" class="block text-sm font-medium text-gray-700">Имя</label>
+            <div class="mt-1">
+              <input
+                v-model="name"
+                type="text"
+                name="name"
+                id="name"
+                autocomplete="given-name"
+                required
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="patronymic" class="block text-sm font-medium text-gray-700">Отчество</label>
+            <div class="mt-1">
+              <input
+                v-model="patronymic"
+                type="text"
+                name="patronymic"
+                id="patronymic"
+                autocomplete="additional-name"
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="birthdate" class="block text-sm font-medium text-gray-700"
+              >Дата рождения</label
+            >
+            <div class="mt-1">
+              <input
+                v-model="birthDate"
+                type="date"
+                name="birthdate"
+                id="birthdate"
+                autocomplete="bday"
+                required
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div>
+
+          <!-- <div class="sm:col-span-4">
+            <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+            <div class="mt-1">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div> -->
+
+          <!-- <div class="sm:col-span-3">
+            <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+            <div class="mt-1">
+              <select
+                id="country"
+                name="country"
+                autocomplete="country-name"
+                class="block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              >
+                <option>United States</option>
+                <option>Canada</option>
+                <option>Mexico</option>
+              </select>
+            </div>
+          </div> -->
+
+          <!-- <div class="sm:col-span-6">
+            <label for="street-address" class="block text-sm font-medium text-gray-700"
+              >Street address</label
+            >
+            <div class="mt-1">
+              <input
+                type="text"
+                name="street-address"
+                id="street-address"
+                autocomplete="street-address"
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div> -->
+
+          <!-- <div class="sm:col-span-2">
+            <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+            <div class="mt-1">
+              <input
+                type="text"
+                name="city"
+                id="city"
+                autocomplete="address-level2"
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div> -->
+
+          <!-- <div class="sm:col-span-2">
+            <label for="region" class="block text-sm font-medium text-gray-700"
+              >State / Province</label
+            >
+            <div class="mt-1">
+              <input
+                type="text"
+                name="region"
+                id="region"
+                autocomplete="address-level1"
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div> -->
+
+          <!-- <div class="sm:col-span-2">
+            <label for="postal-code" class="block text-sm font-medium text-gray-700"
+              >ZIP / Postal code</label
+            >
+            <div class="mt-1">
+              <input
+                type="text"
+                name="postal-code"
+                id="postal-code"
+                autocomplete="postal-code"
+                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div> -->
+        </div>
       </div>
 
-      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-        <div class="sm:col-span-3">
-          <label for="first-name" class="block text-sm font-medium text-gray-700">First name</label>
-          <div class="mt-1">
-            <input type="text" name="first-name" id="first-name" autocomplete="given-name" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-          </div>
-        </div>
-
-        <div class="sm:col-span-3">
-          <label for="last-name" class="block text-sm font-medium text-gray-700">Last name</label>
-          <div class="mt-1">
-            <input type="text" name="last-name" id="last-name" autocomplete="family-name" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-          </div>
-        </div>
-
-        <div class="sm:col-span-4">
-          <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
-          <div class="mt-1">
-            <input id="email" name="email" type="email" autocomplete="email" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-          </div>
-        </div>
-
-        <div class="sm:col-span-3">
-          <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
-          <div class="mt-1">
-            <select id="country" name="country" autocomplete="country-name" class="block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-              <option>United States</option>
-              <option>Canada</option>
-              <option>Mexico</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="sm:col-span-6">
-          <label for="street-address" class="block text-sm font-medium text-gray-700">Street address</label>
-          <div class="mt-1">
-            <input type="text" name="street-address" id="street-address" autocomplete="street-address" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-          </div>
-        </div>
-
-        <div class="sm:col-span-2">
-          <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-          <div class="mt-1">
-            <input type="text" name="city" id="city" autocomplete="address-level2" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-          </div>
-        </div>
-
-        <div class="sm:col-span-2">
-          <label for="region" class="block text-sm font-medium text-gray-700">State / Province</label>
-          <div class="mt-1">
-            <input type="text" name="region" id="region" autocomplete="address-level1" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-          </div>
-        </div>
-
-        <div class="sm:col-span-2">
-          <label for="postal-code" class="block text-sm font-medium text-gray-700">ZIP / Postal code</label>
-          <div class="mt-1">
-            <input type="text" name="postal-code" id="postal-code" autocomplete="postal-code" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Notifications Section -->
-    <div class="pt-8">
+      <!-- Notifications Section -->
+      <!-- <div class="pt-8">
       <div>
         <h3 class="text-lg font-medium leading-6 text-gray-900">Notifications</h3>
         <p class="mt-1 text-sm text-gray-500">We will always let you know about important changes, but you pick what else you want to hear about.</p>
@@ -169,20 +278,31 @@ import RootContainer from '@/components/RootContainer.vue'
           </div>
         </fieldset>
       </div>
-    </div>
+    </div> -->
 
-    <div class="pt-5">
-      <div class="flex justify-end gap-3">
-        <button type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Cancel</button>
-        <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>
+      <div class="pt-5">
+        <div class="flex justify-end gap-3">
+          <button
+            type="button"
+            class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            Отменить
+          </button>
+          <button
+            type="submit"
+            class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            Сохранить
+          </button>
+        </div>
       </div>
     </div>
-    </div>
-   </RootContainer>
+  </RootContainer>
 </template>
 
 <style scoped>
-body, html {
-  height: 100%;
-}
+  body,
+  html {
+    height: 100%;
+  }
 </style>
