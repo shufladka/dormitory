@@ -1,5 +1,9 @@
 import { $fetch } from '@/plugins/fetch'
 
+export async function getAccountsList() {
+  return $fetch('/api/v1/accounts')
+}
+
 export async function login(payload: any) {
     return $fetch('/api/v1/accounts/sign-in', {
       method: 'post',
@@ -50,6 +54,20 @@ export async function updateAddress(payload: any) {
   })
 }
 
-export async function getAccountsList() {
-  return $fetch('/api/v1/accounts')
+export async function getContactInfo(id: number) {
+  return $fetch(`/api/v1/contacts/passport/${id}`)
+}
+
+export async function createContact(payload: any) {
+  return $fetch('/api/v1/contacts', {
+    method: 'post',
+    body: payload,
+  })
+}
+
+export async function updateContact(payload: any) {
+  return $fetch('/api/v1/contacts', {
+    method: 'put',
+    body: payload,
+  })
 }

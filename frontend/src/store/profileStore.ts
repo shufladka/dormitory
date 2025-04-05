@@ -1,8 +1,19 @@
-import { createAddress, createPassport, getAddressInfo, getPassportInfo, updateAddress, updatePassport } from '@/api/profile'
+import { createAddress, createContact, createPassport, getAddressInfo, getContactInfo, getPassportInfo, updateAddress, updateContact, updatePassport } from '@/api/profile'
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
 import { UserCredentials } from './authStore'
+
+export interface PassportInfo {
+    id: number
+    surname: string
+    name: string
+    patronymic: string
+    birthDate: string
+    accountId: number
+    contactId: number
+    addressId: number
+}
 
 export interface AddressInfo {
     id: number
@@ -15,15 +26,12 @@ export interface AddressInfo {
     zip: string
 }
 
-export interface PassportInfo {
-    id: number
-    surname: string
-    name: string
-    patronymic: string
-    birthDate: string
-    accountId: number
-    contactId: number
-    addressId: number
+export interface ContactInfo {
+    id: number,
+    provider: string,
+    code: string,
+    phoneNumber: string,
+    email: string
 }
 
 export const useProfileStore = defineStore('useProfileStore', () => {
@@ -49,8 +57,18 @@ export const useProfileStore = defineStore('useProfileStore', () => {
         zip: null
     })
 
+    const contact = ref<ContactInfo>({
+        id: null,
+        provider: null,
+        code: null,
+        phoneNumber: null,
+        email: null
+    })
+
     const loading = ref<boolean>(false)
-    const error = ref<boolean>(false)
+    const errorPassport = ref<boolean>(false)
+    const errorAddress = ref<boolean>(false)
+    const errorContact = ref<boolean>(false)
 
     const router = useRouter()
 
@@ -84,13 +102,13 @@ export const useProfileStore = defineStore('useProfileStore', () => {
     async function savePassportInfo() {
         try {
             loading.value = true
-            error.value = false
+            errorPassport.value = false
 
             passport.value.accountId = userCredentials.value.id
             await createPassport(passport.value)
         } catch (e: unknown) {
             console.log(e)
-            error.value = true
+            errorPassport.value = true
         } finally {
             loading.value = false
         }
@@ -99,12 +117,12 @@ export const useProfileStore = defineStore('useProfileStore', () => {
     async function updatePassportInfo() {
         try {
             loading.value = true
-            error.value = false
+            errorPassport.value = false
 
             await updatePassport(passport.value)
         } catch (e: unknown) {
             console.log(e)
-            error.value = true
+            errorPassport.value = true
         } finally {
             loading.value = false
         }
@@ -125,14 +143,14 @@ export const useProfileStore = defineStore('useProfileStore', () => {
     async function saveAddressInfo() {
         try {
             loading.value = true
-            error.value = false
+            errorAddress.value = false
 
             const response = await createAddress(address.value)
             passport.value.addressId = response.id
             await updatePassportInfo()
         } catch (e: unknown) {
             console.log(e)
-            error.value = true
+            errorAddress.value = true
         } finally {
             loading.value = false
         }
@@ -141,12 +159,54 @@ export const useProfileStore = defineStore('useProfileStore', () => {
     async function updateAddressInfo() {
         try {
             loading.value = true
-            error.value = false
+            errorAddress.value = false
 
             await updateAddress(address.value)
         } catch (e: unknown) {
             console.log(e)
-            error.value = true
+            errorAddress.value = true
+        } finally {
+            loading.value = false
+        }
+    }
+
+    async function getContact() {
+        try {
+            loading.value = true
+
+            contact.value = await getContactInfo(passport.value.id)
+        } catch (e: unknown) {
+            console.log(e)
+        } finally {
+            loading.value = false
+        }
+    }
+
+    async function saveContactInfo() {
+        try {
+            loading.value = true
+            errorContact.value = false
+
+            const response = await createContact(contact.value)
+            passport.value.contactId = response.id
+            await updatePassportInfo()
+        } catch (e: unknown) {
+            console.log(e)
+            errorContact.value = true
+        } finally {
+            loading.value = false
+        }
+    }
+
+    async function updateContactInfo() {
+        try {
+            loading.value = true
+            errorContact.value = false
+
+            await updateContact(contact.value)
+        } catch (e: unknown) {
+            console.log(e)
+            errorContact.value = true
         } finally {
             loading.value = false
         }
@@ -155,14 +215,20 @@ export const useProfileStore = defineStore('useProfileStore', () => {
     return {
         passport,
         address,
-        error,
+        contact,
+        errorPassport,
+        errorAddress,
+        errorContact,
         loading,
         getPassport,
         getAddress,
+        getContact,
         savePassportInfo,
         updatePassportInfo,
         saveAddressInfo,
         updateAddressInfo,
+        saveContactInfo,
+        updateContactInfo,
         isAuthenticated,
     }
 })
