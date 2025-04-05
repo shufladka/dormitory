@@ -22,7 +22,7 @@ onMounted(() => {
 })
 
 function goToRegistration() {
-  router.push('/auth/registration')
+  router.replace('/auth/registration')
 }
 </script>
 

@@ -32,7 +32,7 @@ onMounted(() => {
 })
 
 function goToSignIn() {
-  router.push('/auth/sign-in')
+  router.replace('/auth/sign-in')
 }
 </script>
 

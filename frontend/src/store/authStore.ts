@@ -1,5 +1,6 @@
 import { login, registration } from "@/api/profile";
 import { defineStore } from "pinia";
+import { useRouter } from 'vue-router'
 import { ref } from "vue";
 
 export const useAuthStore = defineStore('useAuthStore', () => {
@@ -7,12 +8,14 @@ export const useAuthStore = defineStore('useAuthStore', () => {
     const password = ref<string>('') 
     const error = ref<boolean>(false)
 
+    const router = useRouter()
+
     async function signIn() {
         try {
             error.value = false
 
             const response = await login({ username: username.value, password: password.value })
-            console.log(response)
+            router.replace('/')
         } catch (e: unknown) {
             console.log(e)
             error.value = true
