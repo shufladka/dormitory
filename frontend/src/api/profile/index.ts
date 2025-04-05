@@ -5,7 +5,14 @@ export async function login(payload: any) {
       method: 'post',
       body: payload,
     })
-  }
+}
+
+export async function registration(payload: any) {
+    return $fetch('/api/v1/accounts', {
+      method: 'post',
+      body: payload,
+    })
+}
 
 export async function getAccountsList() {
   return $fetch('/api/v1/accounts')
