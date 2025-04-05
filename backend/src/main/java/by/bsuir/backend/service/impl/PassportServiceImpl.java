@@ -72,30 +72,13 @@ public class PassportServiceImpl implements PassportService {
                 .orElseThrow(() -> new EntityNotFoundException(entityName, id));
     }
 
-//    @Override
-//    public PassportResponseTo update(PassportRequestTo requestTo) {
-//        Address addressFromRequest = addressRepository
-//                .findById(requestTo.addressId())
-//                .orElseThrow(() ->
-//                        new EntityNotFoundException(entityName, requestTo.addressId()));
-//        Contact contactFromRequest = contactRepository
-//                .findById(requestTo.contactId())
-//                .orElseThrow(() ->
-//                        new EntityNotFoundException(entityName, requestTo.contactId()));
-//        Account accountFromRequest = accountRepository
-//                .findById(requestTo.accountId())
-//                .orElseThrow(() ->
-//                        new EntityNotFoundException(entityName, requestTo.accountId()));
-//
-//        return repository.findById(requestTo.id())
-//                .map(entityToUpdate -> mapper.updateEntity(entityToUpdate, requestTo,
-//                        addressFromRequest, contactFromRequest, accountFromRequest))
-//                .map(repository::save)
-//                .map(mapper::toResponseTo)
-//                .orElseThrow(() ->
-//                        new EntityNotFoundException(String
-//                                .format(entityName + " with id %s not found", requestTo.id())));
-//    }
+    @Override
+    public PassportResponseTo findByAccountId(Integer accountId) {
+        return repository.findByAccountId(accountId)
+                .map(mapper::toResponseTo)
+                .orElseThrow(() -> new EntityNotFoundException(entityName, accountId));
+    }
+
 
     @Override
     public PassportResponseTo update(PassportRequestTo requestTo) {
@@ -136,8 +119,6 @@ public class PassportServiceImpl implements PassportService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(entityName + " with id %s not found", requestTo.id())));
     }
-
-
 
     @Override
     public void delete(Integer id) {

@@ -10,6 +10,7 @@ public interface PassportService {
     PassportResponseTo save(PassportRequestTo entity);
     List<PassportResponseTo> findAll(Pageable restriction);
     PassportResponseTo findById(Integer id);
+    PassportResponseTo findByAccountId(Integer id);
     PassportResponseTo update(PassportRequestTo updateRequest);
     void delete(Integer id);
 }

@@ -44,6 +44,12 @@ public class PassportController extends AbstractController {
         return service.findById(id);
     }
 
+    @GetMapping("/account/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PassportResponseTo findByAccountId(@PathVariable Integer id) {
+        return service.findByAccountId(id);
+    }
+
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public PassportResponseTo update(@RequestBody @Valid PassportRequestTo entity) {
