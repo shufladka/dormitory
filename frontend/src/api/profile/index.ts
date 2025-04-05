@@ -37,14 +37,14 @@ export async function getAddressInfo(id: number) {
 }
 
 export async function createAddress(payload: any) {
-  return $fetch('/api/v1/address', {
+  return $fetch('/api/v1/addresses', {
     method: 'post',
     body: payload,
   })
 }
 
 export async function updateAddress(payload: any) {
-  return $fetch('/api/v1/address', {
+  return $fetch('/api/v1/addresses', {
     method: 'put',
     body: payload,
   })

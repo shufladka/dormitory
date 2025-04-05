@@ -5,43 +5,49 @@ import { computed, ref } from 'vue'
 import { UserCredentials } from './authStore'
 
 export interface AddressInfo {
-    id?: number
+    id: number
     isCity: boolean
     settlement: string,
     street: string,
     buildingNumber: number,
-    buildingIndex?: string,
-    flatNumber?: number,
+    buildingIndex: string,
+    flatNumber: number,
     zip: string
 }
 
 export interface PassportInfo {
-    id?: number
+    id: number
     surname: string
     name: string
     patronymic: string
     birthDate: string
-    accountId?: number
-    contactId?: number
-    addressId?: number
+    accountId: number
+    contactId: number
+    addressId: number
 }
 
 export const useProfileStore = defineStore('useProfileStore', () => {
-    const passport = ref<PassportInfo>()
-    const address = ref<AddressInfo | null>(null)
+    const passport = ref<PassportInfo>({
+        id: null,
+        surname: null,
+        name: null,
+        patronymic: null,
+        birthDate: null,
+        accountId: null,
+        contactId: null,
+        addressId: null
+    })
 
-    const surname = ref<string>('')
-    const name = ref<string>('')
-    const patronymic = ref<string>('')
-    const birthDate = ref('')
-
-    const isCity = ref<boolean>(false)
-    const settlement = ref<string>('')
-    const street = ref<string>('')
-    const buildingNumber = ref<number>(0)
-    const buildingIndex = ref<string | null>(null)
-    const flatNumber = ref<number | null>(null)
-    const zip = ref<string>('')
+    const address = ref<AddressInfo>({
+        id: null,
+        isCity: null,
+        settlement: null,
+        street: null,
+        buildingNumber: null,
+        buildingIndex: null,
+        flatNumber: null,
+        zip: null
+    })
 
     const loading = ref<boolean>(false)
     const error = ref<boolean>(false)
@@ -67,13 +73,11 @@ export const useProfileStore = defineStore('useProfileStore', () => {
             loading.value = true
             loadUserData()
 
-            const response = await getPassportInfo(userCredentials.value.id)
-            passport.value = response
+            passport.value = await getPassportInfo(userCredentials.value.id)
         } catch (e: unknown) {
             console.log(e)
         } finally {
             loading.value = false
-            mapPassportFields(passport.value)
         }
     }
 
@@ -109,15 +113,12 @@ export const useProfileStore = defineStore('useProfileStore', () => {
     async function getAddress() {
         try {
             loading.value = true
-            loadUserData()
 
-            const response = await getAddressInfo(passport.value.id)
-            address.value = response
+            address.value = await getAddressInfo(passport.value.id)
         } catch (e: unknown) {
             console.log(e)
         } finally {
             loading.value = false
-            mapAddressFields(address.value)
         }
     }
 
@@ -126,7 +127,9 @@ export const useProfileStore = defineStore('useProfileStore', () => {
             loading.value = true
             error.value = false
 
-            await createAddress(address.value)
+            const response = await createAddress(address.value)
+            passport.value.addressId = response.id
+            await updatePassportInfo()
         } catch (e: unknown) {
             console.log(e)
             error.value = true
@@ -149,39 +152,9 @@ export const useProfileStore = defineStore('useProfileStore', () => {
         }
     }
 
-    function mapPassportFields(passportData: PassportInfo) {
-        surname.value = passportData ? passportData.surname : ''
-        name.value = passportData ? passportData.name : ''
-        patronymic.value = passportData ? passportData.patronymic : ''
-        birthDate.value = passportData ? passportData.birthDate : ''
-    }
-
-    function mapAddressFields(addressData: AddressInfo) {
-        if (addressData) {
-            isCity.value = addressData.isCity
-            settlement.value = addressData.settlement
-            street.value = addressData.street
-            buildingNumber.value = addressData.buildingNumber
-            buildingIndex.value = addressData.buildingIndex
-            flatNumber.value = addressData.flatNumber
-            zip.value = addressData.zip
-        }
-    }
-
     return {
         passport,
         address,
-        surname,
-        name,
-        patronymic,
-        birthDate,
-        isCity,
-        settlement,
-        street,
-        buildingNumber,
-        buildingIndex,
-        flatNumber,
-        zip,
         error,
         loading,
         getPassport,
