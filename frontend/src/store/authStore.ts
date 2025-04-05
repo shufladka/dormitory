@@ -42,6 +42,10 @@ export const useAuthStore = defineStore('useAuthStore', () => {
         }
     }
 
+    function isAuthenticated(): boolean {
+        return false
+    }
+
     return {
         username,
         password,

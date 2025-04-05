@@ -1,9 +1,12 @@
 <script lang="ts" setup>
+import { useProfileStore } from '@/store/profileStore'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { UserCircleIcon } from '@heroicons/vue/24/solid'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+
+const profile = useProfileStore()
 
 interface NavigationItem {
   name: string,
@@ -28,7 +31,8 @@ const navigation: NavigationItem[] = [
 const router = useRouter()
 
 function goProfile() {
-  router.replace('/profile') 
+  if (profile.isAuthenticated) router.replace('/profile')
+  else router.replace('/auth/sign-in')
 }
 
 function signOut() {

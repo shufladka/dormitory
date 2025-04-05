@@ -32,6 +32,24 @@ export async function updatePassport(payload: any) {
   })
 }
 
+export async function getAddressInfo(id: number) {
+  return $fetch(`/api/v1/addresses/passport/${id}`)
+}
+
+export async function createAddress(payload: any) {
+  return $fetch('/api/v1/address', {
+    method: 'post',
+    body: payload,
+  })
+}
+
+export async function updateAddress(payload: any) {
+  return $fetch('/api/v1/address', {
+    method: 'put',
+    body: payload,
+  })
+}
+
 export async function getAccountsList() {
   return $fetch('/api/v1/accounts')
 }
