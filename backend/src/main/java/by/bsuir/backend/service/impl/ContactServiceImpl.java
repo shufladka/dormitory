@@ -57,7 +57,7 @@ public class ContactServiceImpl implements ContactService {
         Contact contact = passport.getContact();
 
         if (contact == null) {
-            throw new EntityNotFoundException("Address", passportId);
+            throw new EntityNotFoundException("Contact", passportId);
         }
 
         return mapper.toResponseTo(contact);
