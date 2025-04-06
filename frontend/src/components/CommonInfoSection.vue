@@ -15,7 +15,7 @@ const selectedOptions = ref<RoleInfo[]>([])
 const auth = useAuthStore()
 
 const profile = useProfileStore()
-const { roleList, errorRole, loading, userCredentials } = storeToRefs(profile)
+const { passport, roleList, errorRole, loading, userCredentials } = storeToRefs(profile)
 
 async function cancelHandle() {
   await profile.getRoleList()

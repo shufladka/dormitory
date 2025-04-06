@@ -112,12 +112,15 @@ export const useProfileStore = defineStore('useProfileStore', () => {
         return false
     })
 
-    async function getPassport() {
+    async function getPassport(passportId?: number) {
         try {
             loading.value = true
+
             loadUserData()
 
-            passport.value = await getPassportInfo(userCredentials.value.id)
+            let id = passportId || userCredentials.value.id
+
+            passport.value = await getPassportInfo(id)
         } catch (e: unknown) {
             console.log(e)
         } finally {

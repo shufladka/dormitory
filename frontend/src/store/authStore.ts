@@ -1,4 +1,4 @@
-import { login, registration, updateAccountInfo } from "@/api/profile";
+import { getAccountsList, login, registration, updateAccountInfo } from "@/api/auth";
 import { defineStore } from "pinia";
 import { useRouter } from 'vue-router'
 import { ref } from "vue";
@@ -19,9 +19,20 @@ export const useAuthStore = defineStore('useAuthStore', () => {
         roles: null
     })
     
+    const accountList = ref<UserCredentials[]>([])
     const error = ref<boolean>(false)
 
     const router = useRouter()
+
+    async function fetchAccountList() {
+        try {
+            error.value = false
+            accountList.value = await getAccountsList()
+        } catch (e: unknown) {
+            console.log(e)
+            error.value = true
+        }
+    }
 
     async function signIn() {
         try {
@@ -68,8 +79,10 @@ export const useAuthStore = defineStore('useAuthStore', () => {
     }
 
     return {
+        accountList,
         credentials,
         error,
+        fetchAccountList,
         signIn,
         register,
         updateAccount,

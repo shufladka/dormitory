@@ -6,7 +6,7 @@ import CommonInfoSection from '@/components/CommonInfoSection.vue'
 import ContactSection from '@/components/ContactsSection.vue'
 import { useProfileStore } from '@/store/profileStore'
 import { storeToRefs } from 'pinia'
-import { onBeforeMount, onMounted, watch } from 'vue'
+import { computed, onBeforeMount, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -19,9 +19,11 @@ onBeforeMount(() => {
   if (!isAuthenticated.value) router.replace('/auth/sign-in')
 })
 
+const accountId = computed(() => Number(router.currentRoute.value.params.id))
+
 onMounted(async () => {
-  profileOption.value = false
-  if (!passport.value.id) await profile.getPassport()
+  profileOption.value = true
+  if (!passport.value.id) await profile.getPassport(accountId.value)
   if (!contact.value.id) await profile.getContact()
   if (!address.value.id) await profile.getAddress()
   if (roleList.value.length < 1) await profile.getRoleList()

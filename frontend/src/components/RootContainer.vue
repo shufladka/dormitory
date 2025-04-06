@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useAuthStore, UserCredentials } from '@/store/authStore'
 import { useProfileStore } from '@/store/profileStore'
 import {
   Disclosure,
@@ -12,8 +13,16 @@ import {
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { UserCircleIcon } from '@heroicons/vue/24/solid'
 import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, ref, watch, watchEffect } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
+
+const currentRoute = ref(router.currentRoute.value)
+
+const authStore = useAuthStore()
+const { accountList } = storeToRefs(authStore)
 
 const profile = useProfileStore()
 const { profileOption } = storeToRefs(profile)
@@ -29,19 +38,19 @@ function isCurrentPage(current: NavigationItem): boolean {
 }
 
 const currentPage = computed(() => {
-  return navigation.find((item: NavigationItem) => item.link === router.currentRoute.value.fullPath)
+  return navigation.find((item: NavigationItem) =>
+    item.link.includes(router.currentRoute.value.fullPath)
+  )
 })
 
 const isProfilePage = computed(() => {
-  return router.currentRoute.value.fullPath === '/profile'
+  return router.currentRoute.value.fullPath.includes('/profile')
 })
 
 const navigation: NavigationItem[] = [
   { name: 'Главная', link: '/' },
   { name: 'Общежитие', link: '/dormitory' },
 ]
-
-const router = useRouter()
 
 function goProfile() {
   if (profile.isAuthenticated) router.replace('/profile')
@@ -52,6 +61,21 @@ function signOut() {
   localStorage.clear()
   router.replace('/auth/sign-in')
 }
+
+const isForeignProfile = computed(() => (route.fullPath.includes('/profile/') ? true : false))
+
+watchEffect(() => {
+  if (route.fullPath.includes('/profile/') && accountList.value.length > 1) {
+    const result = accountList.value.find(
+      (account: UserCredentials) => account.id === Number(route.params.id)
+    )
+    if (!result) router.replace('/error/404')
+  }
+})
+
+onMounted(async () => {
+  await authStore.fetchAccountList()
+})
 </script>
 
 <template>
@@ -155,7 +179,7 @@ function signOut() {
         {{ currentPage ? currentPage.name : '' }}
 
         <!-- Свитчер -->
-        <div v-if="isProfilePage" class="mt-4 flex justify-start">
+        <div v-if="isProfilePage && !isForeignProfile" class="mt-4 flex justify-start">
           <label for="switcher" class="relative inline-flex items-center cursor-pointer">
             <input v-model="profileOption" id="switcher" type="checkbox" class="sr-only peer" />
             <div
