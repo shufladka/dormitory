@@ -92,7 +92,7 @@ export const useProfileStore = defineStore('useProfileStore', () => {
 
     const profileOption = ref<boolean>(false)
 
-    const userCredentials = ref<UserCredentials | null>(null)
+    const userCredentials = ref<UserCredentials>()
     const loadUserData = () => {
         const storedUserData = localStorage.getItem('account-data')
         if (storedUserData) {
@@ -110,6 +110,17 @@ export const useProfileStore = defineStore('useProfileStore', () => {
         if (localStorage.getItem('account-data'))
             return true
         return false
+    })
+
+    const isResident = computed(() => {
+        const credentials = JSON.parse(localStorage.getItem('account-data'))
+        const result = ref<boolean>(false)
+        credentials.roles.map((item) => {
+            if (item === "Проживающий") {
+                result.value = true
+            }
+        })
+        return result.value
     })
 
     async function getPassport(passportId?: number) {
@@ -285,6 +296,7 @@ export const useProfileStore = defineStore('useProfileStore', () => {
 
     return {
         userCredentials,
+        isResident,
         profileOption,
         passport,
         address,

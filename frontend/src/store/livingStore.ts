@@ -1,6 +1,7 @@
-import { getBlockDormitoryList, getBlockList, getDormitoryList, getEmployeeList, getResidentList } from "@/api/living";
+import { updateAccountInfo } from "@/api/auth";
+import { createContractInfo, getBlockDormitoryList, getBlockList, getContractList, getDormitoryList, getEmployeeList, getResidentList, updateResidentInfo } from "@/api/living";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 export interface DormitoryTypes {
     id: number,
@@ -52,6 +53,15 @@ export interface ViolationInfo {
     updatedAt: string
 }
 
+export interface ContractInfo {
+    id: number,
+    blockId: number,
+    status: string,
+    rentPrice: string,
+    createdAt: string,
+    updatedAt: string
+}
+
 export interface DebtInfo {
     id: number,
     contractId: number,
@@ -64,6 +74,7 @@ export interface DebtInfo {
 export interface ResidentInfo {
     id: number,
     passportId: number,
+    accountId: number,
     contracts: number[]
 }
 
@@ -82,6 +93,7 @@ export const useLivingStore = defineStore('useLivingStore', () => {
     const debtList = ref<DebtInfo[]>([])
     const residentList = ref<ResidentInfo[]>([])
     const employeeList = ref<EmployeeInfo[]>([])
+    const contractList = ref<ContractInfo[]>([])
 
     const loading = ref<boolean>(false)
     const errorDormitoryType = ref<boolean>(false)
@@ -93,6 +105,21 @@ export const useLivingStore = defineStore('useLivingStore', () => {
     const errorDebt = ref<boolean>(false)
     const errorResident = ref<boolean>(false)
     const errorEmployee = ref<boolean>(false)
+    const errorContract = ref<boolean>(false)
+
+    function residentHasContract(accountId: number, blockId: number): boolean {
+        const resident = residentList.value.find(r => r.accountId === accountId)
+        if (!resident) return false
+    
+        return resident.contracts.some(contractId => {
+            const contract = contractList.value.find(c => c.id === contractId)
+            return contract?.blockId === blockId
+        })
+    }
+
+    function getResidentByAccountId(accountId: number) {
+        return residentList.value.find((resident: ResidentInfo) => resident.accountId === accountId)
+    }
 
     async function getDormitories() {
         try {
@@ -150,6 +177,24 @@ export const useLivingStore = defineStore('useLivingStore', () => {
         }
     }
 
+    async function updateResident(resident: ResidentInfo) {
+        try {
+            loading.value = true
+            errorResident.value = false
+
+            console.log(resident)
+            await updateResidentInfo(resident)
+            await getResidents()
+            await getContracts()
+            
+        } catch (e: unknown) {
+            console.log(e)
+            errorResident.value = true
+        } finally {
+            loading.value = false
+        }
+    }
+
     async function getEmployees() {
         try {
             loading.value = true
@@ -159,6 +204,37 @@ export const useLivingStore = defineStore('useLivingStore', () => {
         } catch (e: unknown) {
             console.log(e)
             errorEmployee.value = true
+        } finally {
+            loading.value = false
+        }
+    }
+
+    async function getContracts() {
+        try {
+            loading.value = true
+            errorContract.value = false
+
+            contractList.value = await getContractList()
+        } catch (e: unknown) {
+            console.log(e)
+            errorContract.value = true
+        } finally {
+            loading.value = false
+        }
+    }
+
+    async function createContract(blockId: number) {
+        try {
+            loading.value = true
+            errorContract.value = false
+
+            console.log(blockId)
+            const response = await createContractInfo({ blockId })
+            return response
+        } catch (e: unknown) {
+            console.log(e)
+            errorContract.value = true
+            return null
         } finally {
             loading.value = false
         }
@@ -174,6 +250,7 @@ export const useLivingStore = defineStore('useLivingStore', () => {
         debtList,
         residentList,
         employeeList,
+        contractList,
 
         loading,
 
@@ -186,11 +263,21 @@ export const useLivingStore = defineStore('useLivingStore', () => {
         errorDebt,
         errorResident,
         errorEmployee,
+        errorContract,
+
+        getResidentByAccountId,
+
+        residentHasContract,
 
         getDormitories,
         getAllBlocks,
         getBlocksByDormitory,
         getResidents,
         getEmployees,
+        getContracts,
+
+        createContract,
+
+        updateResident,
     }
 })

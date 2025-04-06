@@ -1,31 +1,80 @@
 <script setup lang="ts">
-import { BlockInfo } from '@/store/livingStore'
+import { useAuthStore } from '@/store/authStore'
+import { BlockInfo, ResidentInfo, useLivingStore } from '@/store/livingStore'
+import { useProfileStore } from '@/store/profileStore'
+import { storeToRefs } from 'pinia'
+import { computed, onMounted, toRaw } from 'vue'
 
-defineProps<BlockInfo>()
+const props = defineProps<{
+  room: BlockInfo
+}>()
+
+const living = useLivingStore()
+const { residentList } = storeToRefs(living)
+
+const profile = useProfileStore()
+const { isAuthenticated, isResident, passport, userCredentials } = storeToRefs(profile)
+
+const hasContractThisBlock = computed(() => {
+  return living.residentHasContract(userCredentials.value.id, props.room.id)
+})
+
+const showButton = computed(() => {
+  if (isAuthenticated.value && isResident.value) {
+    return true
+  }
+  return false
+})
+
+async function handleMoveIn() {
+  const response = await living.createContract(props.room.id)
+
+  const resident: ResidentInfo = toRaw(
+    living.getResidentByAccountId(toRaw(userCredentials.value.id))
+  )
+  resident.contracts.push(response.id)
+
+  await living.updateResident(resident)
+}
 </script>
 
 <template>
   <div class="rounded-2xl border border-gray-200 p-4 shadow-sm bg-white hover:shadow-md transition">
     <div class="flex justify-between items-center">
-      <h3 class="text-lg font-semibold text-indigo-600">Комната №{{ roomNumber }}</h3>
-      <span class="text-sm text-gray-500">Этаж {{ floor }}</span>
+      <h3 class="text-lg font-semibold text-indigo-600">Комната №{{ room.roomNumber }}</h3>
+      <span class="text-sm text-gray-500">Этаж {{ room.floor }}</span>
     </div>
     <div class="mt-2 text-sm text-gray-700 space-y-1">
       <p>
-        Коек: <span class="font-medium">{{ capacity }}</span>
+        Коек: <span class="font-medium">{{ room.capacity }}</span>
       </p>
       <p>
         Газ:
-        <span :class="isGasified ? 'text-green-600' : 'text-red-600'">{{
-          isGasified ? 'Да' : 'Нет'
+        <span :class="room.isGasified ? 'text-green-600' : 'text-red-600'">{{
+          room.isGasified ? 'Да' : 'Нет'
         }}</span>
       </p>
       <p>
         С/У раздельный:
-        <span :class="isBathroomSeparated ? 'text-green-600' : 'text-red-600'">{{
-          isBathroomSeparated ? 'Да' : 'Нет'
+        <span :class="room.isBathroomSeparated ? 'text-green-600' : 'text-red-600'">{{
+          room.isBathroomSeparated ? 'Да' : 'Нет'
         }}</span>
       </p>
     </div>
+
+    <button
+      v-if="showButton && !hasContractThisBlock"
+      @click="handleMoveIn"
+      class="w-full mt-2 px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition"
+    >
+      Подать заявку на заселение
+    </button>
+    <button
+      v-if="hasContractThisBlock"
+      disabled
+      class="w-full mt-2 px-4 py-2 rounded-xl bg-indigo-400 text-white hover:bg-indigo-500 transition"
+    >
+      У Вас уже есть активная заявка
+    </button>
   </div>
 </template>

@@ -50,8 +50,8 @@ const isProfilePage = computed(() => {
 const navigation: NavigationItem[] = [
   { name: 'Общежития', link: '/dormitories' },
   { name: 'Блоки комнат', link: '/blocks' },
-  { name: 'Сотрудники', link: '/employees' },
-  { name: 'Жильцы', link: '/residents' },
+  // { name: 'Сотрудники', link: '/employees' },
+  { name: 'Заявки', link: '/applications' },
 ]
 
 function goProfile() {
