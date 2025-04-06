@@ -20,6 +20,7 @@ public interface ResidentMapper {
                           @Context Passport passportFromUpdateRequest);
 
     @Mapping(target = "passportId", source = "passport.id")
+    @Mapping(target = "accountId", source = "passport.account.id")
     @Mapping(target = "contracts", expression = "java(entity.getContracts().stream().map(Contract::getId).toList())")
     ResidentResponseTo toResponseTo(Resident entity);
 }

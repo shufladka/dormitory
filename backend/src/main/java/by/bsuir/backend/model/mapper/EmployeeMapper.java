@@ -19,6 +19,7 @@ public interface EmployeeMapper {
                           @Context Passport passportFromUpdateRequest, @Context Position positionFromUpdateRequest);
 
     @Mapping(target = "passportId", source = "passport.id")
-    @Mapping(target = "positionId", source = "position.id")
+    @Mapping(target = "accountId", source = "passport.account.id")
+    @Mapping(target = "position", source = "position.name")
     EmployeeResponseTo toResponseTo(Employee entity);
 }
