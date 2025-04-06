@@ -36,6 +36,12 @@ export async function updateContractInfo(payload: any) {
   })
 }
 
+export async function removeContractInfo(id: number) {
+  return $fetch(`/api/v1/contracts/${id}`, {
+    method: 'delete',
+  })
+}
+
 export async function getBlockDormitoryList(id: number) {
   return $fetch(`/api/v1/blocks/dormitory/${id}`)
 }

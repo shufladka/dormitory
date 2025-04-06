@@ -1,5 +1,5 @@
 import { updateAccountInfo } from "@/api/auth";
-import { createContractInfo, getBlockDormitoryList, getBlockList, getContractList, getDormitoryList, getEmployeeList, getResidentList, updateResidentInfo } from "@/api/living";
+import { createContractInfo, getBlockDormitoryList, getBlockList, getContractList, getDormitoryList, getEmployeeList, getResidentList, removeContractInfo, updateResidentInfo } from "@/api/living";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
@@ -228,9 +228,23 @@ export const useLivingStore = defineStore('useLivingStore', () => {
             loading.value = true
             errorContract.value = false
 
-            console.log(blockId)
             const response = await createContractInfo({ blockId })
             return response
+        } catch (e: unknown) {
+            console.log(e)
+            errorContract.value = true
+            return null
+        } finally {
+            loading.value = false
+        }
+    }
+
+    async function removeContract(contractId: number) {
+        try {
+            loading.value = true
+            errorContract.value = false
+
+            const response = await removeContractInfo(contractId)
         } catch (e: unknown) {
             console.log(e)
             errorContract.value = true
@@ -279,5 +293,7 @@ export const useLivingStore = defineStore('useLivingStore', () => {
         createContract,
 
         updateResident,
+
+        removeContract,
     }
 })

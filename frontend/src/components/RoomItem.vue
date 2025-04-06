@@ -10,6 +10,7 @@ const props = defineProps<{
 }>()
 
 const living = useLivingStore()
+const { contractList } = storeToRefs(living)
 
 const profile = useProfileStore()
 const { isAuthenticated, isResident, userCredentials } = storeToRefs(profile)
@@ -34,6 +35,22 @@ async function handleMoveIn() {
   resident.contracts.push(response.id)
 
   await living.updateResident(resident)
+}
+
+async function handleMoveOut() {
+  const resident = living.getResidentByAccountId(userCredentials.value.id)
+  if (!resident) {
+    return
+  }
+
+  const contract = contractList.value.find(
+    (c) => c.blockId === props.room.id && resident.contracts.includes(c.id)
+  )
+
+  if (contract) {
+    await living.removeContract(contract.id)
+    await living.updateResident(resident)
+  }
 }
 </script>
 
@@ -70,10 +87,10 @@ async function handleMoveIn() {
     </button>
     <button
       v-if="hasContractThisBlock"
-      disabled
-      class="w-full mt-2 px-4 py-2 rounded-xl bg-indigo-400 text-white hover:bg-indigo-500 transition"
+      @click="handleMoveOut"
+      class="w-full mt-2 px-4 py-2 rounded-xl bg-stone-500 text-white hover:bg-stone-600 transition"
     >
-      У Вас уже есть активная заявка
+      Отменить заявку на заселение
     </button>
   </div>
 </template>

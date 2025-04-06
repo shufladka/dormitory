@@ -63,7 +63,7 @@ const handleMoveOut = () => {
 </script>
 
 <template>
-  <div class="rounded-2xl border p-4 shadow-sm w-full bg-white">
+  <div class="rounded-2xl border p-4 w-full shadow-sm bg-white hover:shadow-md transition">
     <h3 class="text-lg font-semibold text-indigo-600">[Номер {{ resident.id }}] {{ fullName }}</h3>
     <span class="text-sm text-gray-500">Ожидает решения о заселении</span>
     <!-- <div v-if="hasActiveContract" class="mt-4">
