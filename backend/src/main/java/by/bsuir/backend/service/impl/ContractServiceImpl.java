@@ -94,7 +94,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public void delete(Integer id) {
-        repository.findById(id)
+        repository.findByIdIncludingDeleted(id)
                 .ifPresentOrElse(contract -> {
                     contract.setDeletedAt(LocalDateTime.now());
                     repository.save(contract);
@@ -102,5 +102,4 @@ public class ContractServiceImpl implements ContractService {
                     throw new EntityNotFoundException(entityName, id);
                 });
     }
-
 }
