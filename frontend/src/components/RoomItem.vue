@@ -10,10 +10,9 @@ const props = defineProps<{
 }>()
 
 const living = useLivingStore()
-const { residentList } = storeToRefs(living)
 
 const profile = useProfileStore()
-const { isAuthenticated, isResident, passport, userCredentials } = storeToRefs(profile)
+const { isAuthenticated, isResident, userCredentials } = storeToRefs(profile)
 
 const hasContractThisBlock = computed(() => {
   return living.residentHasContract(userCredentials.value.id, props.room.id)
@@ -41,12 +40,12 @@ async function handleMoveIn() {
 <template>
   <div class="rounded-2xl border border-gray-200 p-4 shadow-sm bg-white hover:shadow-md transition">
     <div class="flex justify-between items-center">
-      <h3 class="text-lg font-semibold text-indigo-600">Комната №{{ room.roomNumber }}</h3>
+      <h3 class="text-lg font-semibold text-indigo-600">Блок №{{ room.roomNumber }}</h3>
       <span class="text-sm text-gray-500">Этаж {{ room.floor }}</span>
     </div>
     <div class="mt-2 text-sm text-gray-700 space-y-1">
       <p>
-        Коек: <span class="font-medium">{{ room.capacity }}</span>
+        Свободных мест: <span class="font-medium">{{ room.capacity }}</span>
       </p>
       <p>
         Газ:

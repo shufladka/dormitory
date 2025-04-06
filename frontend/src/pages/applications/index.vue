@@ -1,35 +1,37 @@
 <script setup>
-import ResidentCard from '@/components/ResidentCard.vue'
+import ApplicationCard from '@/components/ApplicationCard.vue'
 import RootContainer from '@/components/RootContainer.vue'
 import { useLivingStore } from '@/store/livingStore'
+import { useProfileStore } from '@/store/profileStore'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
 
 const living = useLivingStore()
-const { residentList, blockList, errorDormitory } = storeToRefs(living)
+const { residentList, blockList, contractList } = storeToRefs(living)
+
+const profile = useProfileStore()
+const { passportList, userCredentials } = storeToRefs(profile)
 
 onMounted(async () => {
-  // if (dormitoryList.value.length < 1) await living.getDormitories()
+  if (!userCredentials.value) profile.loadUserData()
+  if (passportList.value.length < 1) await profile.getPassports()
+  if (contractList.value.length < 1) await living.getContracts()
+  if (residentList.value.length < 1) await living.getResidents()
   await living.getAllBlocks()
-  await living.getResidents()
-  await living.getContracts()
 })
 </script>
 
 <template>
   <RootContainer>
-    <div>
-      {{ residentList }}
-      {{ blockList }}
-    </div>
+    <div></div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <ResidentCard
+      <ApplicationCard
         v-for="resident in residentList"
         :key="resident.id"
         :resident="resident"
         :blocks="blockList"
-        @move-in="onMoveIn"
-        @move-out="onMoveOut"
+        :passports="passportList"
+        :contracts="contractList"
       />
     </div>
   </RootContainer>

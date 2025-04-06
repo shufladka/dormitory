@@ -7,14 +7,10 @@ import { storeToRefs } from 'pinia'
 import { computed, onMounted } from 'vue'
 
 const living = useLivingStore()
-const { residentList, dormitoryList, blockList, contractList, errorDormitory } = storeToRefs(living)
+const { residentList, dormitoryList, blockList, contractList } = storeToRefs(living)
 
 const profile = useProfileStore()
 const { userCredentials } = storeToRefs(profile)
-
-// const hasContracts = computed(() => {
-//   if (userCredentials.value) return living.residentHasContracts(userCredentials.value.id)
-// })
 
 onMounted(async () => {
   if (!userCredentials.value) profile.loadUserData()

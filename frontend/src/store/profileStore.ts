@@ -6,6 +6,7 @@ import {
     getAddressInfo,
     getContactInfo,
     getPassportInfo,
+    getPassportList,
     getRoles,
     updateAddress,
     updateContact,
@@ -52,6 +53,7 @@ export interface RoleInfo {
 }
 
 export const useProfileStore = defineStore('useProfileStore', () => {
+    const passportList = ref<PassportInfo[]>([])
     const passport = ref<PassportInfo>({
         id: null,
         surname: null,
@@ -122,6 +124,20 @@ export const useProfileStore = defineStore('useProfileStore', () => {
         })
         return result.value
     })
+
+    async function getPassports() {
+        try {
+            loading.value = true
+            errorPassport.value = false
+
+            passportList.value = await getPassportList()
+        } catch (e: unknown) {
+            console.log(e)
+            errorPassport.value = true
+        } finally {
+            loading.value = false
+        }
+    }
 
     async function getPassport(passportId?: number) {
         try {
@@ -299,18 +315,24 @@ export const useProfileStore = defineStore('useProfileStore', () => {
         isResident,
         profileOption,
         passport,
+        passportList,
         address,
         contact,
         roleList,
+
         errorPassport,
         errorAddress,
         errorContact,
         errorRole,
+
         loading,
+
+        getPassports,
         getPassport,
         getAddress,
         getContact,
         getRoleList,
+
         savePassportInfo,
         updatePassportInfo,
         saveAddressInfo,

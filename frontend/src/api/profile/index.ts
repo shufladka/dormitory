@@ -4,6 +4,10 @@ export async function getPassportInfo(id: number) {
   return $fetch(`/api/v1/passports/account/${id}`)
 }
 
+export async function getPassportList() {
+  return $fetch('/api/v1/passports')
+}
+
 export async function createPassport(payload: any) {
   return $fetch('/api/v1/passports', {
     method: 'post',
