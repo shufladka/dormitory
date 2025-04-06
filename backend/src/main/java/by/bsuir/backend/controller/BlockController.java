@@ -38,6 +38,12 @@ public class BlockController extends AbstractController {
         return service.findAll(restriction);
     }
 
+    @GetMapping("/dormitory/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<BlockResponseTo> findAllByDormitoryId(@PathVariable Integer id) {
+        return service.findAllByDormitoryId(id);
+    }
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BlockResponseTo findById(@PathVariable Integer id) {

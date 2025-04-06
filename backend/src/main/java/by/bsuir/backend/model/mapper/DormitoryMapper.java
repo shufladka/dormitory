@@ -20,6 +20,6 @@ public interface DormitoryMapper {
                            @Context DormitoryType dormitoryTypeFromUpdateRequest);
 
     @Mapping(target = "addressId", source = "address.id")
-    @Mapping(target = "dormitoryTypeId", source = "dormitoryType.id")
+    @Mapping(target = "dormitoryType", source = "dormitoryType.name")
     DormitoryResponseTo toResponseTo(Dormitory entity);
 }

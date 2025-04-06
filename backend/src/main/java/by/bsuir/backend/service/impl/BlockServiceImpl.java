@@ -4,6 +4,7 @@ import by.bsuir.backend.exception.EntityNotFoundException;
 import by.bsuir.backend.exception.EntitySavingException;
 import by.bsuir.backend.model.dto.request.BlockRequestTo;
 import by.bsuir.backend.model.dto.response.BlockResponseTo;
+import by.bsuir.backend.model.entity.Block;
 import by.bsuir.backend.model.entity.Dormitory;
 import by.bsuir.backend.model.mapper.BlockMapper;
 import by.bsuir.backend.repository.BlockRepository;
@@ -47,6 +48,16 @@ public class BlockServiceImpl implements BlockService {
     public List<BlockResponseTo> findAll(Pageable restriction) {
         return repository.findAll(restriction).stream().map(mapper::toResponseTo).toList();
     }
+
+    @Override
+    public List<BlockResponseTo> findAllByDormitoryId(Integer dormitoryId) {
+        List<Block> blocks = repository.findAllByDormitoryId(dormitoryId);
+
+        return blocks.stream()
+                .map(mapper::toResponseTo)
+                .toList();
+    }
+
 
     @Override
     public BlockResponseTo findById(Integer id) {

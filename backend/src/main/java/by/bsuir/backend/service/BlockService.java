@@ -9,6 +9,7 @@ import java.util.List;
 public interface BlockService {
     BlockResponseTo save(BlockRequestTo entity);
     List<BlockResponseTo> findAll(Pageable restriction);
+    List<BlockResponseTo> findAllByDormitoryId(Integer dormitoryId);
     BlockResponseTo findById(Integer id);
     BlockResponseTo update(BlockRequestTo updateRequest);
     void delete(Integer id);

@@ -22,6 +22,6 @@ public interface ViolationMapper {
                            @Context Status statusFromUpdateRequest);
 
     @Mapping(target = "residentId", source = "resident.id")
-    @Mapping(target = "statusId", source = "status.id")
+    @Mapping(target = "status", source = "status.name")
     ViolationResponseTo toResponseTo(Violation entity);
 }

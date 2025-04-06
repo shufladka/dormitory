@@ -21,6 +21,6 @@ public interface ContractMapper {
                            @Context Status statusFromUpdateRequest);
 
     @Mapping(target = "blockId", source = "block.id")
-    @Mapping(target = "statusId", source = "status.id")
+    @Mapping(target = "status", source = "status.name")
     ContractResponseTo toResponseTo(Contract entity);
 }

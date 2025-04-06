@@ -22,6 +22,6 @@ public interface DebtMapper {
                            @Context Status statusFromUpdateRequest);
 
     @Mapping(target = "contractId", source = "contract.id")
-    @Mapping(target = "statusId", source = "status.id")
+    @Mapping(target = "status", source = "status.name")
     DebtResponseTo toResponseTo(Debt entity);
 }

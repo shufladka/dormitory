@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public record ViolationResponseTo(
         Integer id,
         Integer residentId,
-        Integer statusId,
+        String status,
         String reason,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")

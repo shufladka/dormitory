@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public record DebtResponseTo(
         Integer id,
         Integer contractId,
-        Integer statusId,
+        String status,
         BigDecimal amount,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")

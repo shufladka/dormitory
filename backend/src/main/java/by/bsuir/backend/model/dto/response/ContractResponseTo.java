@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public record ContractResponseTo(
         Integer id,
         Integer blockId,
-        Integer statusId,
+        String status,
         BigDecimal rentPrice,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
