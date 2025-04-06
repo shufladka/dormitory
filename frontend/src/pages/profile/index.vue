@@ -2,6 +2,7 @@
 import RootContainer from '@/components/RootContainer.vue'
 import PersonalInfoSection from '@/components/PersonalInfoSection.vue'
 import RegistryAddressSection from '@/components/RegistryAddressSection.vue'
+import CommonInfoSection from '@/components/CommonInfoSection.vue'
 import ContactSection from '@/components/ContactsSection.vue'
 import { useProfileStore } from '@/store/profileStore'
 import { storeToRefs } from 'pinia'
@@ -11,7 +12,8 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const profile = useProfileStore()
-const { profileOption, passport, address, contact, isAuthenticated } = storeToRefs(profile)
+const { profileOption, passport, address, contact, roleList, isAuthenticated } =
+  storeToRefs(profile)
 
 onBeforeMount(() => {
   if (!isAuthenticated.value) router.replace('/auth/sign-in')
@@ -21,6 +23,7 @@ onMounted(async () => {
   if (!passport.value.id) await profile.getPassport()
   if (!contact.value.id) await profile.getContact()
   if (!address.value.id) await profile.getAddress()
+  if (roleList.value.length < 1) await profile.getRoleList()
 })
 </script>
 
@@ -34,6 +37,9 @@ onMounted(async () => {
 
       <hr />
       <ContactSection />
+    </div>
+    <div v-else class="space-y-8">
+      <CommonInfoSection />
     </div>
   </RootContainer>
 </template>

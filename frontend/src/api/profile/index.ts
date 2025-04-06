@@ -18,6 +18,13 @@ export async function registration(payload: any) {
     })
 }
 
+export async function updateAccountInfo(payload: any) {
+  return $fetch('/api/v1/accounts', {
+    method: 'put',
+    body: payload,
+  })
+}
+
 export async function getPassportInfo(id: number) {
   return $fetch(`/api/v1/passports/account/${id}`)
 }
@@ -66,6 +73,24 @@ export async function createContact(payload: any) {
 }
 
 export async function updateContact(payload: any) {
+  return $fetch('/api/v1/contacts', {
+    method: 'put',
+    body: payload,
+  })
+}
+
+export async function getRoles() {
+  return $fetch('/api/v1/roles')
+}
+
+export async function createRole(payload: any) {
+  return $fetch('/api/v1/roles', {
+    method: 'post',
+    body: payload,
+  })
+}
+
+export async function updateRole(payload: any) {
   return $fetch('/api/v1/contacts', {
     method: 'put',
     body: payload,

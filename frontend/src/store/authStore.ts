@@ -1,13 +1,14 @@
-import { login, registration } from "@/api/profile";
+import { login, registration, updateAccountInfo } from "@/api/profile";
 import { defineStore } from "pinia";
 import { useRouter } from 'vue-router'
 import { ref } from "vue";
+import { RoleInfo } from "./profileStore";
 
 export interface UserCredentials {
     id: number,
     username: string,
     password: string,
-    roleIds: string[]
+    roles: RoleInfo[]
 }
 
 export const useAuthStore = defineStore('useAuthStore', () => {
@@ -15,7 +16,7 @@ export const useAuthStore = defineStore('useAuthStore', () => {
         id: null,
         username: null,
         password: null,
-        roleIds: null
+        roles: null
     })
     
     const error = ref<boolean>(false)
@@ -46,10 +47,31 @@ export const useAuthStore = defineStore('useAuthStore', () => {
         }
     }
 
+    async function updateAccount(roleIds?: number[]) {
+        try {
+            error.value = false
+
+            credentials.value = JSON.parse(localStorage.getItem('account-data'))
+
+            const response = await updateAccountInfo({
+                id: credentials.value.id,
+                username: credentials.value.username,
+                password: credentials.value.password,
+                roleIds
+            })
+
+            localStorage.setItem('account-data', JSON.stringify(response))
+        } catch (e: unknown) {
+            console.log(e)
+            error.value = true
+        }
+    }
+
     return {
         credentials,
         error,
         signIn,
         register,
+        updateAccount,
     }
 })

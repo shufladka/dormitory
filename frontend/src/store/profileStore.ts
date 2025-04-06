@@ -1,6 +1,18 @@
-import { createAddress, createContact, createPassport, getAddressInfo, getContactInfo, getPassportInfo, updateAddress, updateContact, updatePassport } from '@/api/profile'
+import { 
+    createAddress,
+    createContact,
+    createPassport,
+    createRole,
+    getAddressInfo,
+    getContactInfo,
+    getPassportInfo,
+    getRoles,
+    updateAddress,
+    updateContact,
+    updatePassport,
+    updateRole
+} from '@/api/profile'
 import { defineStore } from 'pinia'
-import { useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
 import { UserCredentials } from './authStore'
 
@@ -34,6 +46,11 @@ export interface ContactInfo {
     email: string
 }
 
+export interface RoleInfo {
+    id: number,
+    name: string
+}
+
 export const useProfileStore = defineStore('useProfileStore', () => {
     const passport = ref<PassportInfo>({
         id: null,
@@ -65,12 +82,13 @@ export const useProfileStore = defineStore('useProfileStore', () => {
         email: null
     })
 
+    const roleList = ref<RoleInfo[]>([])
+
     const loading = ref<boolean>(false)
     const errorPassport = ref<boolean>(false)
     const errorAddress = ref<boolean>(false)
     const errorContact = ref<boolean>(false)
-
-    const router = useRouter()
+    const errorRole = ref<boolean>(false)
 
     const profileOption = ref<boolean>(false)
 
@@ -79,6 +97,12 @@ export const useProfileStore = defineStore('useProfileStore', () => {
         const storedUserData = localStorage.getItem('account-data')
         if (storedUserData) {
             userCredentials.value = JSON.parse(storedUserData)
+        }
+    }
+
+    function updateUserData() {
+        if (userCredentials.value) {
+            localStorage.setItem('account-data', JSON.stringify(userCredentials.value))
         }
     }
 
@@ -214,24 +238,74 @@ export const useProfileStore = defineStore('useProfileStore', () => {
         }
     }
 
+    async function getRoleList() {
+        try {
+            loading.value = true
+
+            roleList.value = await getRoles()
+        } catch (e: unknown) {
+            console.log(e)
+        } finally {
+            loading.value = false
+        }
+    }
+
+    async function saveRoleInfo(role: RoleInfo) {
+        try {
+            loading.value = true
+            errorRole.value = false
+
+            await createRole(role)
+            await getRoleList()
+        } catch (e: unknown) {
+            console.log(e)
+            errorRole.value = true
+        } finally {
+            loading.value = false
+        }
+    }
+
+    async function updateRoleInfo(role: RoleInfo) {
+        try {
+            loading.value = true
+            errorRole.value = false
+
+            await updateRole(role)
+            await getRoleList()
+        } catch (e: unknown) {
+            console.log(e)
+            errorRole.value = true
+        } finally {
+            loading.value = false
+        }
+    }
+
     return {
+        userCredentials,
         profileOption,
         passport,
         address,
         contact,
+        roleList,
         errorPassport,
         errorAddress,
         errorContact,
+        errorRole,
         loading,
         getPassport,
         getAddress,
         getContact,
+        getRoleList,
         savePassportInfo,
         updatePassportInfo,
         saveAddressInfo,
         updateAddressInfo,
         saveContactInfo,
         updateContactInfo,
+        saveRoleInfo,
+        updateRoleInfo,
         isAuthenticated,
+        loadUserData,
+        updateUserData,
     }
 })
