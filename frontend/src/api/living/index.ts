@@ -1,97 +1,152 @@
 import { $fetch } from '@/plugins/fetch'
 
-export async function getAccountsList() {
-  return $fetch('/api/v1/accounts')
+export async function getDormitoryList() {
+  return $fetch('/api/v1/dormitories')
 }
 
-export async function login(payload: any) {
-    return $fetch('/api/v1/accounts/sign-in', {
-      method: 'post',
-      body: payload,
-    })
-}
-
-export async function registration(payload: any) {
-    return $fetch('/api/v1/accounts', {
-      method: 'post',
-      body: payload,
-    })
-}
-
-export async function updateAccountInfo(payload: any) {
-  return $fetch('/api/v1/accounts', {
-    method: 'put',
-    body: payload,
-  })
-}
-
-export async function getPassportInfo(id: number) {
-  return $fetch(`/api/v1/passports/account/${id}`)
-}
-
-export async function createPassport(payload: any) {
-  return $fetch('/api/v1/passports', {
+export async function createDormitoryInfo(payload: any) {
+  return $fetch('/api/v1/blocks', {
     method: 'post',
     body: payload,
   })
 }
 
-export async function updatePassport(payload: any) {
-  return $fetch('/api/v1/passports', {
+export async function updateDormitoryInfo(payload: any) {
+  return $fetch('/api/v1/dormitories', {
     method: 'put',
     body: payload,
   })
 }
 
-export async function getAddressInfo(id: number) {
-  return $fetch(`/api/v1/addresses/passport/${id}`)
+export async function getContractList() {
+  return $fetch('/api/v1/contracts')
 }
 
-export async function createAddress(payload: any) {
-  return $fetch('/api/v1/addresses', {
+export async function createContractInfo(payload: any) {
+  return $fetch('/api/v1/contracts', {
     method: 'post',
     body: payload,
   })
 }
 
-export async function updateAddress(payload: any) {
-  return $fetch('/api/v1/addresses', {
+export async function updateContractInfo(payload: any) {
+  return $fetch('/api/v1/contracts', {
     method: 'put',
     body: payload,
   })
 }
 
-export async function getContactInfo(id: number) {
-  return $fetch(`/api/v1/contacts/passport/${id}`)
+export async function getBlockDormitoryList(id: number) {
+  return $fetch(`/api/v1/blocks/dormitory/${id}`)
 }
 
-export async function createContact(payload: any) {
-  return $fetch('/api/v1/contacts', {
+export async function getBlockList() {
+  return $fetch('/api/v1/blocks')
+}
+
+export async function createBlockInfo(payload: any) {
+  return $fetch('/api/v1/blocks', {
     method: 'post',
     body: payload,
   })
 }
 
-export async function updateContact(payload: any) {
-  return $fetch('/api/v1/contacts', {
+export async function updateBlockInfo(payload: any) {
+  return $fetch('/api/v1/blocks', {
     method: 'put',
     body: payload,
   })
 }
 
-export async function getRoles() {
-  return $fetch('/api/v1/roles')
+export async function getStatusList() {
+  return $fetch('/api/v1/statuses')
 }
 
-export async function createRole(payload: any) {
-  return $fetch('/api/v1/roles', {
+export async function createStatusInfo(payload: any) {
+  return $fetch('/api/v1/statuses', {
     method: 'post',
     body: payload,
   })
 }
 
-export async function updateRole(payload: any) {
-  return $fetch('/api/v1/contacts', {
+export async function updateStatusInfo(payload: any) {
+  return $fetch('/api/v1/statuses', {
+    method: 'put',
+    body: payload,
+  })
+}
+
+export async function getPaymentList() {
+  return $fetch('/api/v1/payments')
+}
+
+export async function createPaymentInfo(payload: any) {
+  return $fetch('/api/v1/payments', {
+    method: 'post',
+    body: payload,
+  })
+}
+
+export async function updatePaymentInfo(payload: any) {
+  return $fetch('/api/v1/payments', {
+    method: 'put',
+    body: payload,
+  })
+}
+
+export async function getViolationList() {
+  return $fetch('/api/v1/violations')
+}
+
+export async function createViolationInfo(payload: any) {
+  return $fetch('/api/v1/violations', {
+    method: 'post',
+    body: payload,
+  })
+}
+
+export async function updateViolationInfo(payload: any) {
+  return $fetch('/api/v1/violations', {
+    method: 'put',
+    body: payload,
+  })
+}
+
+export async function getDebtList() {
+  return $fetch('/api/v1/debts')
+}
+
+export async function createDebtInfo(payload: any) {
+  return $fetch('/api/v1/debts', {
+    method: 'post',
+    body: payload,
+  })
+}
+
+export async function updateDebtInfo(payload: any) {
+  return $fetch('/api/v1/debts', {
+    method: 'put',
+    body: payload,
+  })
+}
+
+export async function getResidentList() {
+  return $fetch('/api/v1/residents')
+}
+
+export async function updateResidentInfo(payload: any) {
+  return $fetch('/api/v1/residents', {
+    method: 'put',
+    body: payload,
+  })
+}
+
+export async function getEmployeeList() {
+  return $fetch('/api/v1/employees')
+}
+
+export async function updateEmployeeInfo(payload: any) {
+  return $fetch('/api/v1/employees', {
     method: 'put',
     body: payload,
   })

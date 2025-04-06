@@ -1,15 +1,16 @@
 <script lang="ts" setup>
-import RootContainer from '@/components/RootContainer.vue'
-import { useProfileStore } from '@/store/profileStore'
-import { storeToRefs } from 'pinia'
-import { onBeforeMount, onMounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 defineProps({
   title: String,
   loading: Boolean,
   error: Boolean,
 })
+
+const isForeignProfile = computed(() => (route.fullPath.includes('/profile/') ? true : false))
 
 const emit = defineEmits(['cancel', 'save'])
 
@@ -29,7 +30,7 @@ function save() {
 
   <slot />
 
-  <div class="flex justify-end gap-3">
+  <div v-if="!isForeignProfile" class="flex justify-end gap-3">
     <div v-if="error" class="pt-4 flex place-content-end text-pink-700">Произошла ошибка</div>
     <button
       @click="cancel"

@@ -26,7 +26,6 @@ onMounted(async () => {
   if (!passport.value.id) await profile.getPassport(accountId.value)
   if (!contact.value.id) await profile.getContact()
   if (!address.value.id) await profile.getAddress()
-  if (roleList.value.length < 1) await profile.getRoleList()
 })
 </script>
 

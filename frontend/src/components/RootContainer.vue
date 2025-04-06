@@ -33,13 +33,13 @@ interface NavigationItem {
 }
 
 function isCurrentPage(current: NavigationItem): boolean {
-  if (current.link) return current.link === router.currentRoute.value.fullPath
+  if (current.link) return router.currentRoute.value.fullPath.includes(current.link)
   return false
 }
 
 const currentPage = computed(() => {
   return navigation.find((item: NavigationItem) =>
-    item.link.includes(router.currentRoute.value.fullPath)
+    router.currentRoute.value.fullPath.includes(item.link)
   )
 })
 
@@ -48,8 +48,10 @@ const isProfilePage = computed(() => {
 })
 
 const navigation: NavigationItem[] = [
-  { name: 'Главная', link: '/' },
-  { name: 'Общежитие', link: '/dormitory' },
+  { name: 'Общежития', link: '/dormitories' },
+  { name: 'Блоки комнат', link: '/blocks' },
+  { name: 'Сотрудники', link: '/employees' },
+  { name: 'Жильцы', link: '/residents' },
 ]
 
 function goProfile() {
@@ -159,7 +161,7 @@ onMounted(async () => {
           v-for="item in navigation"
           :key="item.name"
           as="a"
-          :href="item.href"
+          :href="item.link"
           :class="[
             item.current
               ? 'bg-gray-900 text-white'
