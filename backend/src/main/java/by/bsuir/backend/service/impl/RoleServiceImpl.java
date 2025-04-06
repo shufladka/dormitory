@@ -46,6 +46,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public RoleResponseTo findByName(String name) {
+        return repository.findByName(name)
+                .map(mapper::toResponseTo)
+                .orElseThrow(() -> new EntityNotFoundException(entityName, name));
+    }
+
+    @Override
     public RoleResponseTo update(RoleRequestTo requestTo) {
         return repository.findById(requestTo.id())
                 .map(entityToUpdate -> mapper.updateEntity(entityToUpdate, requestTo))

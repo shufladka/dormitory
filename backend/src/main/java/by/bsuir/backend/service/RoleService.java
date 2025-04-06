@@ -10,6 +10,7 @@ public interface RoleService {
     RoleResponseTo save(RoleRequestTo entity);
     List<RoleResponseTo> findAll(Pageable restriction);
     RoleResponseTo findById(Integer id);
+    RoleResponseTo findByName(String name);
     RoleResponseTo update(RoleRequestTo updateRequest);
     void delete(Integer id);
 }

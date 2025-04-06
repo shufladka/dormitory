@@ -21,6 +21,10 @@ public class EntityNotFoundException extends RuntimeException {
         super("Error occurred while search entity '" + name + "' with ID '" + id + "'");
     }
 
+    public EntityNotFoundException(String entityName, String name) {
+        super("Error occurred while search entity '" + entityName + "' with name '" + name + "'");
+    }
+
     public EntityNotFoundException(String name, Integer id, Throwable cause) {
         super("Error occurred while search entity '" + name + "' with ID '" + id + "': " + cause);
     }

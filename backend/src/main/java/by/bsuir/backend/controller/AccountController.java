@@ -63,7 +63,7 @@ public class AccountController extends AbstractController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public AccountResponseTo update(@RequestBody @Valid AccountRequestTo entity) {
+    public AccountResponseTo update(@RequestBody AccountRequestTo entity) {
         return service.update(entity);
     }
 

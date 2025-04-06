@@ -5,9 +5,7 @@ import by.bsuir.backend.model.dto.response.RoleResponseTo;
 import by.bsuir.backend.service.RoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,14 +26,8 @@ public class RoleController extends AbstractController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<RoleResponseTo> findAll(@RequestParam(defaultValue = "0") Integer pageNumber,
-                                        @RequestParam(defaultValue = "5") Integer pageSize,
-                                        @RequestParam(defaultValue = "id,desc") String[] sortParameters) {
-
-        List<Sort.Order> sortOrders = getSortOrderList(sortParameters);
-        Pageable restriction = PageRequest.of(pageNumber, pageSize, Sort.by(sortOrders));
-
-        return service.findAll(restriction);
+    public List<RoleResponseTo> findAll() {
+        return service.findAll(Pageable.unpaged());
     }
 
     @GetMapping("/{id}")
