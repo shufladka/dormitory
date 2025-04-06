@@ -44,12 +44,12 @@ public class ResidentServiceImpl implements ResidentService {
 
         log.info("Found passport: {}", passportFromRequest);
 
-        List<Contract> contracts = contractRepository.findAllById(requestTo.contractIds());
+        List<Contract> contracts = contractRepository.findAllById(requestTo.contracts());
         log.info("Contracts found: {}", contracts.size());
 
-        if (contracts.size() != requestTo.contractIds().size()) {
+        if (contracts.size() != requestTo.contracts().size()) {
             log.error("Some contracts were not found. Expected: {}, Found: {}",
-                    requestTo.contractIds().size(), contracts.size());
+                    requestTo.contracts().size(), contracts.size());
             throw new EntityNotFoundException("Некоторые контракты не найдены");
         }
 
@@ -89,8 +89,8 @@ public class ResidentServiceImpl implements ResidentService {
             resident.setPassport(passportFromRequest);
         }
 
-        if (requestTo.contractIds() != null) {
-            List<Contract> contracts = contractRepository.findAllById(requestTo.contractIds());
+        if (requestTo.contracts() != null) {
+            List<Contract> contracts = contractRepository.findAllById(requestTo.contracts());
             resident.setContracts(contracts);
         }
 

@@ -38,8 +38,10 @@ public class ContractServiceImpl implements ContractService {
         Block blockFromRequest = blockRepository.findById(requestTo.blockId())
                 .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.blockId()));
 
-        Status statusFromRequest = statusRepository.findById(requestTo.statusId())
-                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.statusId()));
+        Status statusFromRequest = requestTo.statusId() != null ?
+                statusRepository.findById(requestTo.statusId())
+                        .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.statusId())) :
+                null;
 
         return Optional.of(requestTo)
                 .map(request -> {
@@ -51,6 +53,7 @@ public class ContractServiceImpl implements ContractService {
                 .map(mapper::toResponseTo)
                 .orElseThrow(() -> new EntitySavingException(entityName, requestTo.id()));
     }
+
 
     @Override
     public List<ContractResponseTo> findAll(Pageable restriction) {
@@ -72,9 +75,10 @@ public class ContractServiceImpl implements ContractService {
                 .findById(requestTo.blockId())
                 .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.blockId()));
 
-        Status statusFromRequest = statusRepository
-                .findById(requestTo.statusId())
-                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.statusId()));
+        Status statusFromRequest = requestTo.statusId() != null ?
+                statusRepository.findById(requestTo.statusId())
+                        .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.statusId())) :
+                null;
 
         return repository.findById(requestTo.id())
                 .map(entityToUpdate -> {
