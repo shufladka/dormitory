@@ -46,7 +46,7 @@ public class ContractController extends AbstractController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public ContractResponseTo update(@RequestBody @Valid ContractRequestTo entity) {
+    public ContractResponseTo update(@RequestBody ContractRequestTo entity) {
         return service.update(entity);
     }
 

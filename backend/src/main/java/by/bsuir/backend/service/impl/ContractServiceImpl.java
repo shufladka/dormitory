@@ -82,8 +82,17 @@ public class ContractServiceImpl implements ContractService {
 
         return repository.findById(requestTo.id())
                 .map(entityToUpdate -> {
+                    // Обновляем блок и статус через маппер
                     mapper.updateEntity(entityToUpdate, requestTo, blockFromRequest, statusFromRequest);
+
+                    // Обновляем поле updatedAt
                     entityToUpdate.setUpdatedAt(LocalDateTime.now());
+
+                    // Явно обновляем статус, если он был передан
+                    if (statusFromRequest != null) {
+                        entityToUpdate.setStatus(statusFromRequest); // явно присваиваем статус
+                    }
+
                     return entityToUpdate;
                 })
                 .map(repository::save)
@@ -91,6 +100,8 @@ public class ContractServiceImpl implements ContractService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format(entityName + " with id %s not found", requestTo.id())));
     }
+
+
 
     @Override
     public void delete(Integer id) {

@@ -26,17 +26,17 @@ public class Contract {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "block_id", nullable = false)
+    @JoinColumn(name = "block_id")
     private Block block;
 
     @ManyToOne
-    @JoinColumn(name = "status_id", nullable = false)
+    @JoinColumn(name = "status_id")
     private Status status;
 
-    @Column(name="rent_price", precision = 8, scale = 2, nullable = false)
+    @Column(name="rent_price", precision = 8, scale = 2)
     private BigDecimal rentPrice;
 
-    @Column(name="created_at", updatable = false, nullable = false)
+    @Column(name="created_at", updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 
@@ -33,5 +34,6 @@ public class Resident {
             joinColumns = @JoinColumn(name = "resident_id"),
             inverseJoinColumns = @JoinColumn(name = "contract_id")
     )
+    @Where(clause = "deleted_at IS NULL")
     private List<Contract> contracts;
 }
