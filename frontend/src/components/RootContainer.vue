@@ -77,9 +77,8 @@ watchEffect(() => {
 watchEffect(async () => {
   const credentials = localStorage.getItem('account-data')
 
-  // Если credentials отсутствуют — редиректим на страницу входа
   if (!credentials) {
-    router.replace('/error/403')
+    router.replace('/error/401')
     return
   }
 

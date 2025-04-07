@@ -313,6 +313,7 @@ export const useProfileStore = defineStore('useProfileStore', () => {
 
             await updateRole(role)
             await getRoleList()
+            await getPassport()
         } catch (e: unknown) {
             console.log(e)
             errorRole.value = true

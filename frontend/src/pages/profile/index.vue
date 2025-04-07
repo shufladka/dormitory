@@ -8,6 +8,7 @@ import { useProfileStore } from '@/store/profileStore'
 import { storeToRefs } from 'pinia'
 import { onBeforeMount, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import ResidentContractsStatus from '@/components/ResidentContractsStatus.vue'
 
 const router = useRouter()
 
@@ -21,16 +22,19 @@ onBeforeMount(() => {
 
 onMounted(async () => {
   profileOption.value = false
-  if (!passport.value.id) await profile.getPassport()
-  if (!contact.value.id) await profile.getContact()
-  if (!address.value.id) await profile.getAddress()
-  if (roleList.value.length < 1) await profile.getRoleList()
+  await profile.getPassport()
+  await profile.getContact()
+  await profile.getAddress()
+  await profile.getRoleList()
 })
 </script>
 
 <template>
   <RootContainer>
     <div v-if="profileOption" class="space-y-8">
+      <CommonInfoSection />
+
+      <hr />
       <PersonalInfoSection />
 
       <hr />
@@ -40,7 +44,7 @@ onMounted(async () => {
       <ContactSection />
     </div>
     <div v-else class="space-y-8">
-      <CommonInfoSection />
+      <ResidentContractsStatus />
     </div>
   </RootContainer>
 </template>

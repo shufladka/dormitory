@@ -13,8 +13,8 @@ const profile = useProfileStore()
 const { passportList, userCredentials, isAuthenticated, isEmployee } = storeToRefs(profile)
 
 onMounted(async () => {
+  profile.loadUserData()
   if (isEmployee.value) {
-    profile.loadUserData()
     await profile.getPassports()
     await living.getContracts()
     await living.getResidents()

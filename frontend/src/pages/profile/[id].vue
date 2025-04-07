@@ -6,32 +6,39 @@ import CommonInfoSection from '@/components/CommonInfoSection.vue'
 import ContactSection from '@/components/ContactsSection.vue'
 import { useProfileStore } from '@/store/profileStore'
 import { storeToRefs } from 'pinia'
-import { computed, onBeforeMount, onMounted, watch } from 'vue'
+import { computed, onMounted, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
 const profile = useProfileStore()
-const { profileOption, passport, address, contact, roleList, isAuthenticated } =
+const { profileOption, isEmployee, passport, address, contact, roleList, isAuthenticated } =
   storeToRefs(profile)
 
-onBeforeMount(() => {
-  if (!isAuthenticated.value) router.replace('/auth/sign-in')
-})
-
 const accountId = computed(() => Number(router.currentRoute.value.params.id))
+
+watchEffect(async () => {
+  // Если credentials отсутствуют — редиректим на страницу входа
+  if (!isEmployee.value) {
+    router.replace('/error/403')
+    return
+  }
+})
 
 onMounted(async () => {
   profileOption.value = true
   if (!passport.value.id) await profile.getPassport(accountId.value)
-  if (!contact.value.id) await profile.getContact()
-  if (!address.value.id) await profile.getAddress()
+  await profile.getContact()
+  await profile.getAddress()
 })
 </script>
 
 <template>
   <RootContainer>
     <div v-if="profileOption" class="space-y-8">
+      <CommonInfoSection />
+
+      <hr />
       <PersonalInfoSection />
 
       <hr />
@@ -41,7 +48,7 @@ onMounted(async () => {
       <ContactSection />
     </div>
     <div v-else class="space-y-8">
-      <CommonInfoSection />
+      {{ dfg }}
     </div>
   </RootContainer>
 </template>
