@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Size;
 public record AddressRequestTo(
         Integer id,
 
-        @NotNull
         Boolean isCity,
 
         @NotNull
@@ -20,7 +19,7 @@ public record AddressRequestTo(
         @NotNull
         Integer buildingNumber,
 
-        @Size(min = 2, max = 4, message = "Building index must be between 2 and 4 characters.")
+        @Size(min = 0, max = 4, message = "Building index must be between 0 and 4 characters.")
         String buildingIndex,
 
         Integer flatNumber,

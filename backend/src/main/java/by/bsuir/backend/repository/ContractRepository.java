@@ -17,5 +17,4 @@ public interface ContractRepository extends JpaRepository<Contract, Integer> {
 
     @Query("SELECT c FROM Contract c WHERE c.id = :id")
     Optional<Contract> findByIdIncludingDeleted(@Param("id") Integer id);
-
 }
