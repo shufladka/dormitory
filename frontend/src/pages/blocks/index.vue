@@ -4,16 +4,15 @@ import RootContainer from '@/components/RootContainer.vue'
 import { useLivingStore } from '@/store/livingStore'
 import { useProfileStore } from '@/store/profileStore'
 import { storeToRefs } from 'pinia'
-import { computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
 
 const living = useLivingStore()
-const { residentList, dormitoryList, blockList, contractList } = storeToRefs(living)
+const { blockList } = storeToRefs(living)
 
 const profile = useProfileStore()
-const { userCredentials } = storeToRefs(profile)
 
 onMounted(async () => {
-  if (!userCredentials.value) profile.loadUserData()
+  profile.loadUserData()
   await living.getContracts()
   await living.getDormitories()
   await living.getResidents()

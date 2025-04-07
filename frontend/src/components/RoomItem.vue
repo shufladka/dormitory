@@ -19,6 +19,16 @@ const hasContractThisBlock = computed(() => {
   return living.residentHasContract(userCredentials.value.id, props.room.id)
 })
 
+const isLiving = computed(() => {
+  const resident = living.getResidentByAccountId(userCredentials.value.id)
+  if (!resident) return false
+
+  const res = contractList.value.some(
+    (contract) => resident.contracts.includes(contract.id) && contract.status === 'Заселение'
+  )
+  return res
+})
+
 const showButton = computed(() => {
   if (isAuthenticated.value && isResident.value) {
     return true
@@ -78,19 +88,31 @@ async function handleMoveOut() {
       </p>
     </div>
 
+    <!-- Кнопка для подачи заявки на заселение -->
     <button
-      v-if="showButton && !hasContractThisBlock"
+      v-if="showButton && !hasContractThisBlock && !isLiving"
       @click="handleMoveIn"
       class="w-full mt-2 px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition"
     >
       Подать заявку на заселение
     </button>
+
+    <!-- Кнопка для отмены заявки на заселение -->
     <button
-      v-if="hasContractThisBlock"
+      v-if="showButton && hasContractThisBlock && !isLiving"
       @click="handleMoveOut"
       class="w-full mt-2 px-4 py-2 rounded-xl bg-stone-500 text-white hover:bg-stone-600 transition"
     >
       Отменить заявку на заселение
+    </button>
+
+    <!-- Кнопка для отображения информации о текущем проживании -->
+    <button
+      v-if="showButton && isLiving"
+      disabled
+      class="w-full mt-2 px-4 py-2 rounded-xl bg-gray-400 text-white"
+    >
+      Вы уже проживаете в общежитии
     </button>
   </div>
 </template>
