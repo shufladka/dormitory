@@ -91,7 +91,7 @@ onMounted(async () => {
               class="text-xs px-2 py-1 rounded-full font-medium"
               :class="statusColor(contract.status)"
             >
-              {{ contract.status }}
+              {{ contract.status || 'Не назначен' }}
             </span>
           </div>
           <div class="text-sm text-gray-600">
