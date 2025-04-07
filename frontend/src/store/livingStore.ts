@@ -1,5 +1,5 @@
 import { updateAccountInfo } from "@/api/auth";
-import { createContractInfo, getBlockDormitoryList, getBlockList, getContractList, getDormitoryList, getEmployeeList, getResidentList, removeContractInfo, updateResidentInfo } from "@/api/living";
+import { createContractInfo, getBlockDormitoryList, getBlockList, getContractList, getDormitoryList, getEmployeeList, getResidentList, removeContractInfo, updateContractInfo, updateResidentInfo } from "@/api/living";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
@@ -57,6 +57,7 @@ export interface ContractInfo {
     id: number,
     blockId: number,
     status: string,
+    statusId: number,
     rentPrice: string,
     createdAt: string,
     updatedAt: string
@@ -182,7 +183,6 @@ export const useLivingStore = defineStore('useLivingStore', () => {
             loading.value = true
             errorResident.value = false
 
-            console.log(resident)
             await updateResidentInfo(resident)
             await getResidents()
             await getContracts()
@@ -239,12 +239,28 @@ export const useLivingStore = defineStore('useLivingStore', () => {
         }
     }
 
+    async function updateContract(contract: ContractInfo) {
+        try {
+            loading.value = true
+            errorContract.value = false
+
+            await updateContractInfo(contract)
+            await getResidents()
+            await getContracts()
+        } catch (e: unknown) {
+            console.log(e)
+            errorContract.value = true
+        } finally {
+            loading.value = false
+        }
+    }
+
     async function removeContract(contractId: number) {
         try {
             loading.value = true
             errorContract.value = false
 
-            const response = await removeContractInfo(contractId)
+            await removeContractInfo(contractId)
         } catch (e: unknown) {
             console.log(e)
             errorContract.value = true
@@ -293,6 +309,7 @@ export const useLivingStore = defineStore('useLivingStore', () => {
         createContract,
 
         updateResident,
+        updateContract,
 
         removeContract,
     }

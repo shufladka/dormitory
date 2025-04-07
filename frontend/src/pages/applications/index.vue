@@ -32,6 +32,8 @@ onMounted(async () => {
         :blocks="blockList"
         :passports="passportList"
         :contracts="contractList"
+        @move-in="living.updateContract"
+        @move-out="living.updateContract"
       />
     </div>
   </RootContainer>

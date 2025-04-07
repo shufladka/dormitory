@@ -10,8 +10,17 @@ const props = defineProps<{
   contracts: ContractInfo[]
 }>()
 
+const emit = defineEmits(['move-in', 'move-out'])
+
 // ФИО жильца по passportId
 const passport = computed(() => props.passports.find((p) => p.id === props.resident.passportId))
+
+const description = computed(() => {
+  const contract = props.contracts.find((c) => props.resident.contracts.includes(c.id))
+  return hasActiveContract.value
+    ? `Является жильцом общежития. Контракт №${contract.id}`
+    : 'Ожидает решения о заселении'
+})
 
 const fullName = computed(() =>
   passport.value
@@ -24,8 +33,10 @@ const residentContracts = computed(() => {
   return props.contracts.filter((c) => props.resident.contracts.includes(c.id))
 })
 
-// Проверяем, есть ли активные контракты
-const hasActiveContract = computed(() => residentContracts.value.length > 0)
+const hasActiveContract = computed(() => {
+  // Проверяем, есть ли контракт с нужным статусом "Заселение"
+  return residentContracts.value.some((contract) => contract.status === 'Заселение')
+})
 
 // Получаем список блоков, на которые указывают контракты
 const contractBlockIds = computed(() => residentContracts.value.map((c) => c.blockId))
@@ -49,34 +60,60 @@ watch(
 
 // Обработчик для заявки на заселение
 const handleMoveIn = () => {
-  if (selectedBlock.value !== null) {
-    console.log('Заявка на заселение:', props.resident.id, selectedBlock.value)
-    // emit('move-in', { residentId: props.resident.id, blockId: selectedBlock.value })
+  if (selectedBlock.value === null) {
+    console.warn('Блок не выбран')
+    return
+  }
+
+  const contract = props.contracts.find(
+    (c) => props.resident.contracts.includes(c.id) && c.blockId === selectedBlock.value
+  )
+
+  if (contract) {
+    contract.statusId = 7
+    console.log('Заявка на заселение:', contract)
+    emit('move-out', contract)
+  } else {
+    console.warn('Контракт не найден для заселения')
   }
 }
 
 // Обработчик для заявки на выселение
 const handleMoveOut = () => {
-  console.log('Заявка на выселение:', props.resident.id)
-  // emit('move-out', props.resident.id)
+  if (selectedBlock.value === null) {
+    console.warn('Блок не выбран')
+    return
+  }
+
+  const contract = props.contracts.find(
+    (c) => props.resident.contracts.includes(c.id) && c.blockId === selectedBlock.value
+  )
+
+  if (contract) {
+    contract.statusId = 8
+    console.log('Заявка на выселение:', contract)
+    emit('move-out', contract)
+  } else {
+    console.warn('Контракт не найден для выселения')
+  }
 }
 </script>
 
 <template>
   <div class="rounded-2xl border p-4 w-full shadow-sm bg-white hover:shadow-md transition">
     <h3 class="text-lg font-semibold text-indigo-600">[Номер {{ resident.id }}] {{ fullName }}</h3>
-    <span class="text-sm text-gray-500">Ожидает решения о заселении</span>
-    <!-- <div v-if="hasActiveContract" class="mt-4">
+    <span class="text-sm text-gray-500">{{ description }}</span>
+    <div v-if="hasActiveContract" class="mt-4">
       <p class="text-green-700 font-medium">Есть активный контракт</p>
       <button
         @click="handleMoveOut"
         class="mt-2 px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition"
       >
-        Подать заявку на выселение
+        Оформить выселение
       </button>
-    </div> -->
+    </div>
 
-    <div class="mt-4 space-y-2">
+    <div v-else class="mt-4 space-y-2">
       <label class="block text-sm font-medium text-gray-700">Выберите блок:</label>
       <select v-model="selectedBlock" class="w-full rounded-xl border px-3 py-2 text-sm">
         <option disabled value="">-- Комната --</option>
