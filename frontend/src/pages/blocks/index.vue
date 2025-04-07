@@ -14,9 +14,9 @@ const { userCredentials } = storeToRefs(profile)
 
 onMounted(async () => {
   if (!userCredentials.value) profile.loadUserData()
-  if (contractList.value.length < 1) await living.getContracts()
-  if (dormitoryList.value.length < 1) await living.getDormitories()
-  if (residentList.value.length < 1) await living.getResidents()
+  await living.getContracts()
+  await living.getDormitories()
+  await living.getResidents()
   await living.getAllBlocks()
 })
 </script>

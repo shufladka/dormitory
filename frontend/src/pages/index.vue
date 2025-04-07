@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 
 onBeforeMount(() => {
   const router = useRouter()
-  router.replace('/profile')
+  router.replace('/dormitories')
 })
 </script>
 

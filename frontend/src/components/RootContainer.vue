@@ -50,7 +50,6 @@ const isProfilePage = computed(() => {
 const navigation: NavigationItem[] = [
   { name: 'Общежития', link: '/dormitories' },
   { name: 'Блоки комнат', link: '/blocks' },
-  // { name: 'Сотрудники', link: '/employees' },
   { name: 'Заявки', link: '/applications' },
 ]
 
@@ -75,8 +74,25 @@ watchEffect(() => {
   }
 })
 
+watchEffect(async () => {
+  const credentials = localStorage.getItem('account-data')
+
+  // Если credentials отсутствуют — редиректим на страницу входа
+  if (!credentials) {
+    router.replace('/error/403')
+    return
+  }
+
+  // Загружаем список аккаунтов, если ещё не загружен
+  if (authStore.accountList.length === 0) {
+    await authStore.fetchAccountList()
+  }
+})
+
 onMounted(async () => {
-  await authStore.fetchAccountList()
+  if (authStore.accountList.length === 0) {
+    await authStore.fetchAccountList()
+  }
 })
 </script>
 

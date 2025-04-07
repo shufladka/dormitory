@@ -100,34 +100,43 @@ const handleMoveOut = () => {
 </script>
 
 <template>
-  <div class="rounded-2xl border p-4 w-full shadow-sm bg-white hover:shadow-md transition">
-    <h3 class="text-lg font-semibold text-indigo-600">[Номер {{ resident.id }}] {{ fullName }}</h3>
-    <span class="text-sm text-gray-500">{{ description }}</span>
-    <div v-if="hasActiveContract" class="mt-4">
-      <p class="text-green-700 font-medium">Есть активный контракт</p>
-      <button
-        @click="handleMoveOut"
-        class="mt-2 px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition"
-      >
-        Оформить выселение
-      </button>
+  <div
+    class="rounded-2xl border p-4 w-full shadow-sm bg-white hover:shadow-md transition flex flex-col basis-full justify-between"
+  >
+    <div>
+      <h3 class="text-lg font-semibold text-indigo-600">
+        [Номер {{ resident.id }}] {{ fullName }}
+      </h3>
+      <span class="text-sm text-gray-500">{{ description }}</span>
     </div>
 
-    <div v-else class="mt-4 space-y-2">
-      <label class="block text-sm font-medium text-gray-700">Выберите блок:</label>
-      <select v-model="selectedBlock" class="w-full rounded-xl border px-3 py-2 text-sm">
-        <option disabled value="">-- Комната --</option>
-        <option v-for="block in blocksByContracts" :key="block.id" :value="block.id">
-          [ID {{ block.id }}] Комната №{{ block.roomNumber }}
-        </option>
-      </select>
-      <button
-        :disabled="!selectedBlock"
-        @click="handleMoveIn"
-        class="w-full mt-2 px-4 py-2 rounded-xl disabled:text-zinc-700 disabled:bg-slate-200 default:hover::bg-slate-200 bg-blue-600 text-white hover:bg-blue-700 transition"
-      >
-        Согласовать заселение
-      </button>
+    <div>
+      <div v-if="hasActiveContract" class="mt-4">
+        <p class="text-green-700 font-medium">Есть активный контракт</p>
+        <button
+          @click="handleMoveOut"
+          class="w-full mt-2 px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition"
+        >
+          Оформить выселение
+        </button>
+      </div>
+
+      <div v-else class="mt-4">
+        <label class="block text-sm font-medium text-gray-700">Выберите блок:</label>
+        <select v-model="selectedBlock" class="w-full rounded-xl border px-3 py-2 text-sm">
+          <option disabled value="">-- Комната --</option>
+          <option v-for="block in blocksByContracts" :key="block.id" :value="block.id">
+            [ID {{ block.id }}] Комната №{{ block.roomNumber }}
+          </option>
+        </select>
+        <button
+          :disabled="!selectedBlock"
+          @click="handleMoveIn"
+          class="w-full mt-2 px-4 py-2 rounded-xl disabled:text-zinc-700 disabled:bg-slate-200 default:hover::bg-slate-200 bg-blue-600 text-white hover:bg-blue-700 transition"
+        >
+          Согласовать заселение
+        </button>
+      </div>
     </div>
   </div>
 </template>

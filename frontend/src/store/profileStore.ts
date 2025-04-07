@@ -125,6 +125,17 @@ export const useProfileStore = defineStore('useProfileStore', () => {
         return result.value
     })
 
+    const isEmployee = computed(() => {
+        const credentials = JSON.parse(localStorage.getItem('account-data'))
+        const result = ref<boolean>(false)
+        credentials.roles.map((item) => {
+            if (item === "Работник") {
+                result.value = true
+            }
+        })
+        return result.value
+    })
+
     async function getPassports() {
         try {
             loading.value = true
@@ -313,6 +324,8 @@ export const useProfileStore = defineStore('useProfileStore', () => {
     return {
         userCredentials,
         isResident,
+        isEmployee,
+
         profileOption,
         passport,
         passportList,
