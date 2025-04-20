@@ -228,7 +228,7 @@ export const useLivingStore = defineStore('useLivingStore', () => {
             loading.value = true
             errorContract.value = false
 
-            const response = await createContractInfo({ blockId })
+            const response = await createContractInfo({ blockId, statusId: 1 })
             return response
         } catch (e: unknown) {
             console.log(e)
