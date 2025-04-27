@@ -21,6 +21,8 @@ export const useSqlStore = defineStore('useSqlStore', () => {
     const tables = ref<TableInfo[]>([])
     const foreignKeys = ref<ForeignKeysInfo[]>([])
 
+    const switcherOption = ref(0)
+
     async function rawRequest(payload: string) {
         try {
             error.value = false
@@ -69,6 +71,8 @@ export const useSqlStore = defineStore('useSqlStore', () => {
 
         tables,
         foreignKeys,
+
+        switcherOption,
 
         rawRequest,
         getAllTables,

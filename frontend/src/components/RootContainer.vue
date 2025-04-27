@@ -218,6 +218,8 @@ onMounted(async () => {
             </div>
           </label>
         </div>
+
+        <slot name="switcher" />
       </h1>
     </div>
   </header>
