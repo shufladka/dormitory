@@ -13,6 +13,7 @@ const { passport, errorPassport, loading, isAuthenticated } = storeToRefs(profil
 async function passportHandle() {
   if (passport.value.id) await profile.updatePassportInfo()
   else await profile.savePassportInfo()
+  router.push('/profile')
 }
 </script>
 

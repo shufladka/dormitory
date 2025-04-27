@@ -34,7 +34,7 @@ onMounted(async () => {
   <RootContainer>
     <div v-if="profileOption" class="space-y-6">
       <!-- Список ролей -->
-      <CommonInfoSection />
+      <CommonInfoSection v-if="passport.id !== null" />
 
       <hr />
       <!-- Личная информация -->
