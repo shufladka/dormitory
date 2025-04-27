@@ -1,0 +1,46 @@
+package by.bsuir.backend.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/sql")
+public class SQLController extends AbstractController {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    /**
+     * Method for calling some SQL request
+     * @param sql Execute request string
+     */
+    @PostMapping("/execute")
+    public List<Map<String, Object>> executeQuery(@RequestBody String sql) {
+        return jdbcTemplate.queryForList(sql);
+    }
+
+    /**
+     * Method for getting dormitory table names
+     */
+    @GetMapping("/tables")
+    public List<Map<String, Object>> getTables() {
+        String sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = \"dormitory\";";
+        return jdbcTemplate.queryForList(sql);
+    }
+
+    /**
+     * Method for getting dormitory foreign keys
+     */
+    @GetMapping("/foreign-keys")
+    public List<Map<String, Object>> getForeignKeys() {
+        String sql = "SELECT table_name, column_name, referenced_table_name, referenced_column_name " +
+                "FROM information_schema.key_column_usage " +
+                "WHERE referenced_table_name IS NOT NULL " +
+                "AND table_schema = \"dormitory\";";
+        return jdbcTemplate.queryForList(sql);
+    }
+}
