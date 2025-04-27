@@ -51,6 +51,7 @@ const navigation: NavigationItem[] = [
   { name: 'Общежития', link: '/dormitories' },
   { name: 'Блоки комнат', link: '/blocks' },
   { name: 'Заявки', link: '/applications' },
+  { name: 'База данных', link: '/database' },
 ]
 
 function goProfile() {
