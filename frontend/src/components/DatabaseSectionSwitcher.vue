@@ -5,12 +5,12 @@ import { storeToRefs } from 'pinia'
 const sqlStore = useSqlStore()
 const { switcherOption } = storeToRefs(sqlStore)
 
-const switchLabels = ['SQL-запросы', 'Визуализация', 'Статистика', 'Настройки']
+const switchLabels = ['SQL-запросы', 'Визуализация', 'Статистика']
 </script>
 
 <template>
   <div class="mt-4 flex justify-start">
-    <div class="relative w-[440px] h-10 bg-gray-100 rounded-[8px] overflow-hidden">
+    <div class="relative w-[330px] h-10 bg-gray-100 rounded-[8px] overflow-hidden">
       <div
         class="absolute top-0 h-10 w-[110px] bg-white border border-gray-300 shadow-sm rounded-[8px] transition-transform duration-300"
         :style="{ transform: `translateX(${switcherOption * 110}px)` }"
