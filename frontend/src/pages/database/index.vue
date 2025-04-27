@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import RootContainer from '@/components/RootContainer.vue'
-import VisualizeConnectionsSection from '@/components/VisualizeConnectionsSection.vue'
+// import VisualizeConnectionsSection from '@/components/VisualizeConnectionsSection.vue'
+import RawRequestSection from '@/components/RawRequestSection.vue'
 </script>
 
 <template>
   <RootContainer>
-    <VisualizeConnectionsSection />
+    <!-- <VisualizeConnectionsSection /> -->
+    <RawRequestSection />
   </RootContainer>
 </template>
 
