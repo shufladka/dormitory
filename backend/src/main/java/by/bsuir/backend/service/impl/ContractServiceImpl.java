@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,7 @@ public class ContractServiceImpl implements ContractService {
                 .map(request -> {
                     Contract contract = mapper.toEntity(request, blockFromRequest, statusFromRequest);
                     contract.setCreatedAt(LocalDateTime.now());
+                    contract.setRentPrice(BigDecimal.valueOf(60.00));
                     return contract;
                 })
                 .map(repository::save)
