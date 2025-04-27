@@ -105,7 +105,7 @@ const handleMoveOut = () => {
   >
     <div>
       <h3 class="text-lg font-semibold text-indigo-600">
-        [Номер {{ resident.id }}] {{ fullName }}
+        [Жилец №{{ resident.id }}] {{ fullName }}
       </h3>
       <span class="text-sm text-gray-500">{{ description }}</span>
     </div>
