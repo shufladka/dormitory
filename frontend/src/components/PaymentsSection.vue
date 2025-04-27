@@ -30,6 +30,10 @@ function formatDate(date: string) {
   return dayjs(date).format('D MMMM YYYY')
 }
 
+function formatDateTime(date: string) {
+  return dayjs(date).format('D MMMM YYYY HH:mm:ss')
+}
+
 const balance = ref<BalanceInfo>(null)
 
 const paymentAmount = ref<number>()
@@ -67,9 +71,15 @@ const pageSize = 3 // количество платежей на страниц�
 
 const paginatedPayments = computed(() => {
   if (!balance.value?.payments) return []
+
+  const sorted = [...balance.value.payments].sort((a, b) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  })
+
   const start = (currentPage.value - 1) * pageSize
   const end = start + pageSize
-  return balance.value.payments.slice(start, end)
+
+  return sorted.slice(start, end)
 })
 
 const totalPages = computed(() => {
@@ -161,7 +171,7 @@ onMounted(async () => {
             </div>
             <div class="text-sm text-gray-600 mt-0.5">
               Дата оплаты:
-              <span class="font-medium">{{ formatDate(payment.createdAt) }}</span>
+              <span class="font-medium">{{ formatDateTime(payment.createdAt) }}</span>
             </div>
           </li>
 
