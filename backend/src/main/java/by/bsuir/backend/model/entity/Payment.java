@@ -38,7 +38,7 @@ public class Payment {
     @Column(length = 40, nullable = false)
     private String code;
 
-    @Column(name="created_at", updatable = false, nullable = false)
+    @Column(name="created_at", updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 

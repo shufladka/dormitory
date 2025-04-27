@@ -40,7 +40,7 @@ public class PaymentServiceImpl implements PaymentService {
         return Optional.of(requestTo)
                 .map(request -> {
                     Payment Payment = mapper.toEntity(request, balanceFromRequest);
-//                    Payment.setCreatedAt(LocalDateTime.now());
+                    Payment.setCreatedAt(LocalDateTime.now());
                     return Payment;
                 })
                 .map(repository::save)

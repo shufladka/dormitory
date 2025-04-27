@@ -54,7 +54,7 @@ public class BalanceServiceImpl implements BalanceService {
         return repository.findById(requestTo.id())
                 .map(entityToUpdate -> {
                     mapper.updateEntity(entityToUpdate, requestTo);
-//                    entityToUpdate.setUpdatedAt(LocalDateTime.now());
+                    entityToUpdate.setUpdatedAt(LocalDateTime.now());
                     return entityToUpdate;
                 })
                 .map(repository::save)
