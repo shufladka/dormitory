@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,6 +28,9 @@ public class Balance {
 
     @Column(precision = 8, scale = 2, nullable = false)
     private BigDecimal amount;
+
+    @OneToMany(mappedBy = "balance")
+    private List<Payment> payments;
 
     @Column(name="created_at", updatable = false, nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
