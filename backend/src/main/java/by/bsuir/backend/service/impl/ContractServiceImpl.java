@@ -46,7 +46,7 @@ public class ContractServiceImpl implements ContractService {
         return Optional.of(requestTo)
                 .map(request -> {
                     Contract contract = mapper.toEntity(request, blockFromRequest, statusFromRequest);
-                    contract.setCreatedAt(LocalDateTime.now());
+//                    contract.setCreatedAt(LocalDateTime.now());
                     return contract;
                 })
                 .map(repository::save)
@@ -88,7 +88,7 @@ public class ContractServiceImpl implements ContractService {
                 .map(entityToUpdate -> {
                     // Обновляем все поля контракта кроме deleted_at
                     mapper.updateEntity(entityToUpdate, requestTo, blockFromRequest, statusFromRequest);
-                    entityToUpdate.setUpdatedAt(LocalDateTime.now());
+//                    entityToUpdate.setUpdatedAt(LocalDateTime.now());
 
                     // Обновляем статус, если был передан новый
                     if (statusFromRequest != null) {

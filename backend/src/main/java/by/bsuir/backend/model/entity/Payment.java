@@ -26,8 +26,8 @@ public class Payment {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "contract_id", nullable = false)
-    private Contract contract;
+    @JoinColumn(name = "balance_id", nullable = false)
+    private Balance balance;
 
     @Column(name="amount", precision = 8, scale = 2, nullable = false)
     private BigDecimal amount;

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public record PaymentResponseTo(
         Integer id,
-        Integer contractId,
+        Integer balanceId,
         BigDecimal amount,
         String bankName,
         String code,

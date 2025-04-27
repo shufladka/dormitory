@@ -28,6 +28,10 @@ public class Resident {
     @JoinColumn(name = "passport_id")
     private Passport passport;
 
+    @OneToOne()
+    @JoinColumn(name = "balance_id")
+    private Balance balance;
+
     @ManyToMany
     @JoinTable(
             name = "residents_contracts",

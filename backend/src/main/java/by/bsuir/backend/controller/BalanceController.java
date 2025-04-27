@@ -1,8 +1,8 @@
 package by.bsuir.backend.controller;
 
-import by.bsuir.backend.model.dto.request.ViolationRequestTo;
-import by.bsuir.backend.model.dto.response.ViolationResponseTo;
-import by.bsuir.backend.service.ViolationService;
+import by.bsuir.backend.model.dto.request.BalanceRequestTo;
+import by.bsuir.backend.model.dto.response.BalanceResponseTo;
+import by.bsuir.backend.service.BalanceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -15,22 +15,22 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/violations")
-public class ViolationController extends AbstractController {
+@RequestMapping("/balances")
+public class BalanceController extends AbstractController {
     
-    private final ViolationService service;
+    private final BalanceService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ViolationResponseTo save(@RequestBody @Valid ViolationRequestTo entity) {
+    public BalanceResponseTo save(@RequestBody @Valid BalanceRequestTo entity) {
         return service.save(entity);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ViolationResponseTo> findAll(@RequestParam(defaultValue = "0") Integer pageNumber,
-                                        @RequestParam(defaultValue = "5") Integer pageSize,
-                                        @RequestParam(defaultValue = "id,desc") String[] sortParameters) {
+    public List<BalanceResponseTo> findAll(@RequestParam(defaultValue = "0") Integer pageNumber,
+                                           @RequestParam(defaultValue = "5") Integer pageSize,
+                                           @RequestParam(defaultValue = "id,desc") String[] sortParameters) {
 
         List<Sort.Order> sortOrders = getSortOrderList(sortParameters);
         Pageable restriction = PageRequest.of(pageNumber, pageSize, Sort.by(sortOrders));
@@ -40,13 +40,13 @@ public class ViolationController extends AbstractController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ViolationResponseTo findById(@PathVariable Integer id) {
+    public BalanceResponseTo findById(@PathVariable Integer id) {
         return service.findById(id);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public ViolationResponseTo update(@RequestBody @Valid ViolationRequestTo entity) {
+    public BalanceResponseTo update(@RequestBody @Valid BalanceRequestTo entity) {
         return service.update(entity);
     }
 

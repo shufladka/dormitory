@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record DebtResponseTo(
+public record BalanceResponseTo(
         Integer id,
-        Integer contractId,
-        String status,
         BigDecimal amount,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")

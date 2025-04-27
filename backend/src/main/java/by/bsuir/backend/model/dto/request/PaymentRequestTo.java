@@ -8,7 +8,7 @@ public record PaymentRequestTo(
         Integer id,
 
         @NotNull
-        Integer contractId,
+        Integer balanceId,
 
         @NotNull
         BigDecimal amount,

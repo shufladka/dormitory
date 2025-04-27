@@ -4,9 +4,11 @@ import by.bsuir.backend.exception.EntityNotFoundException;
 import by.bsuir.backend.exception.EntitySavingException;
 import by.bsuir.backend.model.dto.request.PaymentRequestTo;
 import by.bsuir.backend.model.dto.response.PaymentResponseTo;
+import by.bsuir.backend.model.entity.Balance;
 import by.bsuir.backend.model.entity.Contract;
 import by.bsuir.backend.model.entity.Payment;
 import by.bsuir.backend.model.mapper.PaymentMapper;
+import by.bsuir.backend.repository.BalanceRepository;
 import by.bsuir.backend.repository.ContractRepository;
 import by.bsuir.backend.repository.PaymentRepository;
 import by.bsuir.backend.service.PaymentService;
@@ -25,20 +27,20 @@ import java.util.Optional;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository repository;
-    private final ContractRepository contractRepository;
+    private final BalanceRepository balanceRepository;
 
     private final PaymentMapper mapper;
     private final String entityName = "Payment";
 
     @Override
     public PaymentResponseTo save(PaymentRequestTo requestTo) {
-        Contract contractFromRequest = contractRepository.findById(requestTo.contractId())
-                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.contractId()));
+        Balance balanceFromRequest = balanceRepository.findById(requestTo.balanceId())
+                .orElseThrow(() -> new EntityNotFoundException(entityName, requestTo.balanceId()));
 
         return Optional.of(requestTo)
                 .map(request -> {
-                    Payment Payment = mapper.toEntity(request, contractFromRequest);
-                    Payment.setCreatedAt(LocalDateTime.now());
+                    Payment Payment = mapper.toEntity(request, balanceFromRequest);
+//                    Payment.setCreatedAt(LocalDateTime.now());
                     return Payment;
                 })
                 .map(repository::save)

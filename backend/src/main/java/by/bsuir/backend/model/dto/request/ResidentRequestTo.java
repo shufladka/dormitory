@@ -10,6 +10,9 @@ public record ResidentRequestTo(
         @NotNull
         Integer passportId,
 
+        @NotNull
+        Integer balanceId,
+
         List<Integer> contracts
 ) {
 }

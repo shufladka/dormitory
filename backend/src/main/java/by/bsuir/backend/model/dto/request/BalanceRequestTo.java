@@ -4,16 +4,10 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record DebtRequestTo(
+public record BalanceRequestTo(
         Integer id,
 
         @NotNull
-        BigDecimal amount,
-
-        @NotNull
-        Integer contractId,
-
-        @NotNull
-        Integer statusId
+        BigDecimal amount
 ) {
 }

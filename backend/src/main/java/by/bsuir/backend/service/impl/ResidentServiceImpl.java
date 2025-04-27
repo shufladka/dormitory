@@ -4,10 +4,12 @@ import by.bsuir.backend.exception.EntityNotFoundException;
 import by.bsuir.backend.exception.EntitySavingException;
 import by.bsuir.backend.model.dto.request.ResidentRequestTo;
 import by.bsuir.backend.model.dto.response.ResidentResponseTo;
+import by.bsuir.backend.model.entity.Balance;
 import by.bsuir.backend.model.entity.Passport;
 import by.bsuir.backend.model.entity.Resident;
 import by.bsuir.backend.model.entity.Contract;
 import by.bsuir.backend.model.mapper.ResidentMapper;
+import by.bsuir.backend.repository.BalanceRepository;
 import by.bsuir.backend.repository.PassportRepository;
 import by.bsuir.backend.repository.ResidentRepository;
 import by.bsuir.backend.repository.ContractRepository;
@@ -27,6 +29,7 @@ public class ResidentServiceImpl implements ResidentService {
 
     private final ResidentRepository repository;
     private final PassportRepository passportRepository;
+    private final BalanceRepository balanceRepository;
     private final ContractRepository contractRepository;
     private final ResidentMapper mapper;
     private final String entityName = "Resident";
@@ -42,7 +45,11 @@ public class ResidentServiceImpl implements ResidentService {
                     return new EntityNotFoundException(entityName, requestTo.passportId());
                 });
 
-        log.info("Found passport: {}", passportFromRequest);
+        Balance balanceFromRequest = balanceRepository
+                .findById(requestTo.balanceId())
+                .orElseThrow(() -> {
+                    return new EntityNotFoundException(entityName, requestTo.passportId());
+                });
 
         List<Contract> contracts = contractRepository.findAllById(requestTo.contracts());
         log.info("Contracts found: {}", contracts.size());
@@ -53,7 +60,7 @@ public class ResidentServiceImpl implements ResidentService {
             throw new EntityNotFoundException("Некоторые контракты не найдены");
         }
 
-        Resident resident = mapper.toEntity(requestTo, passportFromRequest);
+        Resident resident = mapper.toEntity(requestTo, passportFromRequest, balanceFromRequest);
         resident.setContracts(contracts);
 
         try {
@@ -87,6 +94,12 @@ public class ResidentServiceImpl implements ResidentService {
             Passport passportFromRequest = passportRepository.findById(requestTo.passportId())
                     .orElseThrow(() -> new EntityNotFoundException("Passport", requestTo.passportId()));
             resident.setPassport(passportFromRequest);
+        }
+
+        if (requestTo.balanceId() != null) {
+            Balance balanceFromRequest = balanceRepository.findById(requestTo.balanceId())
+                    .orElseThrow(() -> new EntityNotFoundException("Balance", requestTo.balanceId()));
+            resident.setBalance(balanceFromRequest);
         }
 
         if (requestTo.contracts() != null) {

@@ -17,21 +17,13 @@ import java.time.LocalDateTime;
 @Setter
 @SuperBuilder
 @Entity
-@Table(name = "debts")
-public class Debt {
+@Table(name = "balances")
+public class Balance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 8, updatable = false, nullable = false)
     private Integer id;
-
-    @ManyToOne
-    @JoinColumn(name = "contract_id", nullable = false)
-    private Contract contract;
-
-    @ManyToOne
-    @JoinColumn(name = "status_id", nullable = false)
-    private Status status;
 
     @Column(precision = 8, scale = 2, nullable = false)
     private BigDecimal amount;
