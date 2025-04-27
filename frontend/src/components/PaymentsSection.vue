@@ -62,6 +62,33 @@ async function addPayment() {
   }
 }
 
+const currentPage = ref(1)
+const pageSize = 3 // количество платежей на странице
+
+const paginatedPayments = computed(() => {
+  if (!balance.value?.payments) return []
+  const start = (currentPage.value - 1) * pageSize
+  const end = start + pageSize
+  return balance.value.payments.slice(start, end)
+})
+
+const totalPages = computed(() => {
+  if (!balance.value?.payments) return 1
+  return Math.ceil(balance.value.payments.length / pageSize)
+})
+
+function nextPage() {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++
+  }
+}
+
+function prevPage() {
+  if (currentPage.value > 1) {
+    currentPage.value--
+  }
+}
+
 onMounted(async () => {
   await living.getResidents()
   balance.value = await living.getBalance(resident.value.balanceId)
@@ -116,7 +143,7 @@ onMounted(async () => {
 
         <ul v-if="balance.payments.length" class="space-y-3">
           <li
-            v-for="payment in balance.payments"
+            v-for="payment in paginatedPayments"
             :key="payment.id"
             class="gap-2 p-3 bg-gray-50 rounded-lg border"
           >
@@ -137,6 +164,28 @@ onMounted(async () => {
               <span class="font-medium">{{ formatDate(payment.createdAt) }}</span>
             </div>
           </li>
+
+          <div v-if="totalPages > 1" class="flex justify-center items-center gap-4 mt-4">
+            <button
+              @click="prevPage"
+              :disabled="currentPage === 1"
+              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg text-sm font-medium"
+            >
+              Назад
+            </button>
+
+            <span class="text-gray-700 text-sm">
+              Страница {{ currentPage }} из {{ totalPages }}
+            </span>
+
+            <button
+              @click="nextPage"
+              :disabled="currentPage === totalPages"
+              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg text-sm font-medium"
+            >
+              Вперёд
+            </button>
+          </div>
         </ul>
 
         <div v-else class="text-sm text-gray-500">Платежи отсутствуют.</div>

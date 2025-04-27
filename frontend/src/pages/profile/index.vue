@@ -49,11 +49,11 @@ onMounted(async () => {
       <ContactSection />
     </div>
     <div v-else class="space-y-6">
-      <!-- Информация о договорах -->
-      <ResidentContractsStatusSection />
-
       <!-- Информация о платежах -->
       <PaymentsSection />
+
+      <!-- Информация о договорах -->
+      <ResidentContractsStatusSection />
     </div>
   </RootContainer>
 </template>
