@@ -1,5 +1,5 @@
 import { updateAccountInfo } from "@/api/auth";
-import { createContractInfo, getBlockDormitoryList, getBlockList, getContractList, getDormitoryList, getEmployeeList, getResidentList, removeContractInfo, updateContractInfo, updateResidentInfo } from "@/api/living";
+import { createContractInfo, createPaymentInfo, getBalanceById, getBalanceList, getBalancesList, getBlockDormitoryList, getBlockList, getContractList, getDormitoryList, getEmployeeList, getResidentList, removeContractInfo, updateContractInfo, updateResidentInfo } from "@/api/living";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
@@ -34,19 +34,8 @@ export interface StatusInfo {
 
 export interface PaymentInfo {
     id: number,
-    contractId: number,
-    amount: string,
-    bankName: string,
-    code: string,
-    createdAt: string,
-    updatedAt: string
-}
-
-export interface ViolationInfo {
-    id: number,
-    residentId: number,
-    status: string,
-    reason: string,
+    balanceId: number,
+    amount: number,
     bankName: string,
     code: string,
     createdAt: string,
@@ -63,11 +52,10 @@ export interface ContractInfo {
     updatedAt: string
 }
 
-export interface DebtInfo {
+export interface BalanceInfo {
     id: number,
-    contractId: number,
-    status: string,
     amount: string,
+    payments: PaymentInfo[],
     createdAt: string,
     updatedAt: string
 }
@@ -75,6 +63,7 @@ export interface DebtInfo {
 export interface ResidentInfo {
     id: number,
     passportId: number,
+    balanceId: number,
     accountId: number,
     contracts: number[]
 }
@@ -90,8 +79,7 @@ export const useLivingStore = defineStore('useLivingStore', () => {
     const blockList = ref<BlockInfo[]>([])
     const statusList = ref<StatusInfo[]>([])
     const paymentList = ref<PaymentInfo[]>([])
-    const violationList = ref<ViolationInfo[]>([])
-    const debtList = ref<DebtInfo[]>([])
+    const balanceList = ref<BalanceInfo[]>([])
     const residentList = ref<ResidentInfo[]>([])
     const employeeList = ref<EmployeeInfo[]>([])
     const contractList = ref<ContractInfo[]>([])
@@ -102,8 +90,7 @@ export const useLivingStore = defineStore('useLivingStore', () => {
     const errorBlock = ref<boolean>(false)
     const errorStatus = ref<boolean>(false)
     const errorPayment = ref<boolean>(false)
-    const errorViolation = ref<boolean>(false)
-    const errorDebt = ref<boolean>(false)
+    const errorBalance = ref<boolean>(false)
     const errorResident = ref<boolean>(false)
     const errorEmployee = ref<boolean>(false)
     const errorContract = ref<boolean>(false)
@@ -270,14 +257,43 @@ export const useLivingStore = defineStore('useLivingStore', () => {
         }
     }
 
+    async function getBalance(id: number) {
+        try {
+            loading.value = true
+            errorBalance.value = false
+
+            return await getBalanceById(id) 
+        } catch (e: unknown) {
+            console.log(e)
+            errorBalance.value = true
+        } finally {
+            loading.value = false
+        }
+    }
+
+    async function createPayment(payment: Record<string, any>) {
+        try {
+            loading.value = true
+            errorPayment.value = false
+
+            const response = await createPaymentInfo(payment)
+            return response
+        } catch (e: unknown) {
+            console.log(e)
+            errorPayment.value = true
+            return null
+        } finally {
+            loading.value = false
+        }
+    }
+
     return {
         dormitoryTypeList,
         dormitoryList,
         blockList,
         statusList,
         paymentList,
-        violationList,
-        debtList,
+        balanceList,
         residentList,
         employeeList,
         contractList,
@@ -289,8 +305,7 @@ export const useLivingStore = defineStore('useLivingStore', () => {
         errorBlock,
         errorStatus,
         errorPayment,
-        errorViolation,
-        errorDebt,
+        errorDebt: errorBalance,
         errorResident,
         errorEmployee,
         errorContract,
@@ -305,8 +320,10 @@ export const useLivingStore = defineStore('useLivingStore', () => {
         getResidents,
         getEmployees,
         getContracts,
+        getBalance,
 
         createContract,
+        createPayment,
 
         updateResident,
         updateContract,

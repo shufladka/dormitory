@@ -8,7 +8,8 @@ import { useProfileStore } from '@/store/profileStore'
 import { storeToRefs } from 'pinia'
 import { onBeforeMount, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import ResidentContractsStatus from '@/components/ResidentContractsStatus.vue'
+import PaymentsSection from '@/components/PaymentsSection.vue'
+import ResidentContractsStatusSection from '@/components/ResidentContractsStatusSection.vue'
 
 const router = useRouter()
 
@@ -31,20 +32,28 @@ onMounted(async () => {
 
 <template>
   <RootContainer>
-    <div v-if="profileOption" class="space-y-8">
+    <div v-if="profileOption" class="space-y-6">
+      <!-- Список ролей -->
       <CommonInfoSection />
 
       <hr />
+      <!-- Личная информация -->
       <PersonalInfoSection />
 
       <hr />
+      <!-- Адрес регистрации -->
       <RegistryAddressSection />
 
       <hr />
+      <!-- Котнактная информация -->
       <ContactSection />
     </div>
-    <div v-else class="space-y-8">
-      <ResidentContractsStatus />
+    <div v-else class="space-y-6">
+      <!-- Информация о договорах -->
+      <ResidentContractsStatusSection />
+
+      <!-- Информация о платежах -->
+      <PaymentsSection />
     </div>
   </RootContainer>
 </template>

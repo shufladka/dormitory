@@ -82,60 +82,6 @@ export async function updateStatusInfo(payload: any) {
   })
 }
 
-export async function getPaymentList() {
-  return $fetch('/api/v1/payments')
-}
-
-export async function createPaymentInfo(payload: any) {
-  return $fetch('/api/v1/payments', {
-    method: 'post',
-    body: payload,
-  })
-}
-
-export async function updatePaymentInfo(payload: any) {
-  return $fetch('/api/v1/payments', {
-    method: 'put',
-    body: payload,
-  })
-}
-
-export async function getViolationList() {
-  return $fetch('/api/v1/violations')
-}
-
-export async function createViolationInfo(payload: any) {
-  return $fetch('/api/v1/violations', {
-    method: 'post',
-    body: payload,
-  })
-}
-
-export async function updateViolationInfo(payload: any) {
-  return $fetch('/api/v1/violations', {
-    method: 'put',
-    body: payload,
-  })
-}
-
-export async function getDebtList() {
-  return $fetch('/api/v1/debts')
-}
-
-export async function createDebtInfo(payload: any) {
-  return $fetch('/api/v1/debts', {
-    method: 'post',
-    body: payload,
-  })
-}
-
-export async function updateDebtInfo(payload: any) {
-  return $fetch('/api/v1/debts', {
-    method: 'put',
-    body: payload,
-  })
-}
-
 export async function getResidentList() {
   return $fetch('/api/v1/residents')
 }
@@ -154,6 +100,39 @@ export async function getEmployeeList() {
 export async function updateEmployeeInfo(payload: any) {
   return $fetch('/api/v1/employees', {
     method: 'put',
+    body: payload,
+  })
+}
+
+export async function getBalanceList() {
+  return $fetch('/api/v1/balances')
+}
+
+export async function getBalanceById(id: number) {
+  return $fetch(`/api/v1/balances/${id}`)
+}
+
+export async function createBalanceInfo(payload: any) {
+  return $fetch('/api/v1/balances', {
+    method: 'post',
+    body: payload,
+  })
+}
+
+export async function updateBalanceInfo(payload: any) {
+  return $fetch('/api/v1/balances', {
+    method: 'put',
+    body: payload,
+  })
+}
+
+export async function getPaymentList() {
+  return $fetch('/api/v1/payments')
+}
+
+export async function createPaymentInfo(payload: any) {
+  return $fetch('/api/v1/payments', {
+    method: 'post',
     body: payload,
   })
 }
