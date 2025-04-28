@@ -7,7 +7,7 @@ const sqlStore = useSqlStore()
 const { loading } = storeToRefs(sqlStore)
 
 const logStatus = ref<boolean>(false) // Состояние логирования
-const logLimit = ref<number>(10) // Число N для отображения логов
+const logLimit = ref<number>(50) // Число N для отображения логов
 const logsData = ref<any[]>([]) // Массив с данными логов
 const errorMessage = ref<string>('') // Сообщения об ошибках
 const currentLogStatus = ref<string>('') // Текущий статус general_log
@@ -51,7 +51,7 @@ async function fetchLogs() {
 
   try {
     const response = await sqlStore.rawRequest(
-      `SELECT * FROM mysql.general_log ORDER BY event_time DESC LIMIT ${logLimit.value};`
+      `SELECT event_time, user_host, command_type, argument FROM mysql.general_log ORDER BY event_time DESC LIMIT ${logLimit.value};`
     )
     logsData.value = response
   } catch (err) {
