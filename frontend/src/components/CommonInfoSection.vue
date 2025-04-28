@@ -45,7 +45,7 @@ onMounted(() => {
 
 <template>
   <ProfileSectionWrapper
-    title="Информация о пользователе"
+    :title="`Информация о пользователе №${passport.accountId}`"
     @cancel="cancelHandle"
     @save="roleHandle"
     :loading="loading"

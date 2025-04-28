@@ -1,5 +1,5 @@
 
-import { getForeignKeys, getTables, postRawRequest } from "@/api/sql";
+import { getForeignKeys, getTables, postLogOff, postLogOn, postRawRequest } from "@/api/sql";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
@@ -65,6 +65,34 @@ export const useSqlStore = defineStore('useSqlStore', () => {
         }
     }
 
+    async function setGeneralLogOn() {
+        try {
+            error.value = false
+            loading.value = true
+
+            return postLogOn()
+        } catch (e: unknown) {
+            console.log(e)
+            error.value = true
+        } finally {
+            loading.value = false
+        }
+    }
+
+    async function setGeneralLogOff() {
+        try {
+            error.value = false
+            loading.value = true
+
+            return postLogOff()
+        } catch (e: unknown) {
+            console.log(e)
+            error.value = true
+        } finally {
+            loading.value = false
+        }
+    }
+
     return {
         error,
         loading,
@@ -77,5 +105,8 @@ export const useSqlStore = defineStore('useSqlStore', () => {
         rawRequest,
         getAllTables,
         getAllForeignKeys,
+
+        setGeneralLogOn,
+        setGeneralLogOff,
     }
 })

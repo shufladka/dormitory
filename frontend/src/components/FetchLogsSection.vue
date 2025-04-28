@@ -1,27 +1,48 @@
 <script lang="ts" setup>
 import { useSqlStore } from '@/store/sqlStore'
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const sqlStore = useSqlStore()
-const { error, loading } = storeToRefs(sqlStore)
+const { loading } = storeToRefs(sqlStore)
 
 const logStatus = ref<boolean>(false) // Состояние логирования
 const logLimit = ref<number>(10) // Число N для отображения логов
 const logsData = ref<any[]>([]) // Массив с данными логов
-const errorMessage = ref<string>('')
+const errorMessage = ref<string>('') // Сообщения об ошибках
+const currentLogStatus = ref<string>('') // Текущий статус general_log
 
-async function toggleLogStatus(enable: boolean) {
-  try {
-    errorMessage.value = ''
-    await sqlStore.rawRequest(`SET global general_log = '${enable ? 'ON' : 'OFF'}';`)
-    logStatus.value = enable
-  } catch (err) {
-    console.error(err)
-    errorMessage.value = 'Ошибка при изменении состояния логирования.'
+// Функция для получения текущего статуса general_log
+async function getCurrentLogStatus() {
+  const result = await sqlStore.rawRequest('SHOW VARIABLES LIKE "general_log";')
+  console.log(result)
+  if (result && result.length > 0) {
+    currentLogStatus.value = result[0].Value === 'ON' ? 'Разрешен' : 'Запрещен'
+    logStatus.value = result[0].Value === 'ON'
   }
 }
 
+// Функция для переключения логирования
+async function toggleLogStatus(enable: boolean) {
+  errorMessage.value = ''
+  try {
+    // Асинхронно меняем статус логирования
+    if (enable === true) {
+      await sqlStore.setGeneralLogOn()
+    } else {
+      await sqlStore.setGeneralLogOff()
+    }
+
+    // Обновляем состояние UI только после успешного запроса
+    logStatus.value = enable
+    currentLogStatus.value = logStatus.value ? 'Разрешен' : 'Запрещен'
+  } catch (err) {
+    console.error(err)
+    errorMessage.value = 'Ошибка при изменении статуса логирования.'
+  }
+}
+
+// Функция для получения логов
 async function fetchLogs() {
   if (!logLimit.value) {
     errorMessage.value = 'Введите количество логов для отображения.'
@@ -38,20 +59,28 @@ async function fetchLogs() {
     errorMessage.value = 'Ошибка при получении логов.'
   }
 }
+
+// Загружаем текущий статус логирования при монтировании компонента
+onMounted(async () => {
+  await getCurrentLogStatus()
+})
 </script>
 
 <template>
   <div class="p-6 bg-white shadow-lg rounded-lg">
     <h2 class="text-2xl font-semibold mb-4">Управление логами MySQL</h2>
 
+    <!-- Текущий статус логирования -->
+    <div class="mb-4">
+      Текущий статус логирования:
+      <span class="font-semibold">{{ currentLogStatus }}</span>
+    </div>
+
     <!-- Кнопки для разрешения/запрета логирования -->
     <div class="flex space-x-4 mb-4">
       <button
         @click="toggleLogStatus(true)"
-        :class="{
-          'bg-green-500': logStatus,
-          'bg-gray-400': !logStatus,
-        }"
+        :class="logStatus ? 'bg-green-500' : 'bg-gray-400'"
         class="text-white p-3 rounded-md hover:bg-green-600 disabled:bg-gray-400"
         :disabled="loading"
       >
@@ -59,10 +88,7 @@ async function fetchLogs() {
       </button>
       <button
         @click="toggleLogStatus(false)"
-        :class="{
-          'bg-red-500': !logStatus,
-          'bg-gray-400': logStatus,
-        }"
+        :class="logStatus ? 'bg-gray-400' : 'bg-red-500'"
         class="text-white p-3 rounded-md hover:bg-red-600 disabled:bg-gray-400"
         :disabled="loading"
       >
@@ -88,7 +114,7 @@ async function fetchLogs() {
         :disabled="loading"
         class="bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 disabled:bg-gray-400"
       >
-        Вывести последние логи
+        Вывести последние {{ logLimit }} логов
       </button>
     </div>
 
